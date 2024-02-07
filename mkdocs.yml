@@ -186,11 +186,11 @@ markdown_extensions:
 # Page tree
 nav:
   - Home:
-  
     - Home: index.md
     - Bibliothèque:
       - lien1: dossier/page2.md
       - lien2: dossier/page2.md
+      - page 3: page3.md
   - Bibliothèque:
     - nav:
       - Installation: page2.md
