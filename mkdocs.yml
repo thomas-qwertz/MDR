@@ -56,7 +56,6 @@ theme:
     # - navigation.instant
     # - navigation.instant.prefetch
     # - navigation.instant.progress
-    - navigation.path
     # - navigation.prune
     # - navigation.sections
     - navigation.tabs
@@ -64,7 +63,7 @@ theme:
     - navigation.top
     # - navigation.tracking
     - search.highlight
-    - search.share
+    # - search.share
     - search.suggest
     - toc.follow
     # - toc.integrate
@@ -78,19 +77,19 @@ theme:
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/toggle-switch
+        icon: material/toggle-switch-outline
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: black
       accent: indigo
       toggle:
-        icon: material/toggle-switch-off
+        icon: material/toggle-switch-off-outline
         name: Switch to system preference
   font:
-    text: Roboto
+    text: Raleway
     code: Roboto Mono
-  favicon: assets/favicon.png
+  # favicon: assets/favicon.png
   icon:
     logo: logo
     # repo: fontawesome/brands/git
@@ -142,7 +141,7 @@ markdown_extensions:
   - footnotes
   - md_in_html
   - toc:
-      permalink: true
+      permalink: false
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.betterem:
@@ -186,8 +185,6 @@ markdown_extensions:
 # Page tree
 nav:
   - Home:
-  
-    - Home: index.md
     - Bibliothèque:
       - lien1: dossier/page2.md
       - lien2: dossier/page2.md
@@ -218,3 +215,5 @@ nav:
       - Creating a reproduction: guides/creating-a-reproduction.md
   - Blog:
     - blog/index.md
+  - À propos: page2.md
+  - Contribuer/Discuter: page3.md
