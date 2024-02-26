@@ -19,25 +19,22 @@
 # IN THE SOFTWARE.
 
 # Project information
-site_name: TEST-MKDMAT
-site_url: https://thomas-qwertz.github.io/test-mk/
-site_author: Thomas
+site_name: MUTUALISATION DES RESSOURCES
+site_url: https://thomas-qwertz.github.io/MDR/
+site_author: Thomas Goffin
 site_description: >-
-  Write your documentation in Markdown and create a professional static site in
-  minutes – searchable, customizable, in 60+ languages, for all devices
+  MDR, la plateforme dédiée à la Mutualisation Des Ressources pour la Recherche Orientée par la Conception
 
 # Repository
-repo_name: thomas-qwertz/test-mk
-# repo_url: https://github.com/thomas-qwertz/test-mk
-edit_uri: edit/main/docs/
-
-# Copyright
-#copyright: Copyright &copy; 2016 - 2024 Martin Donath
+repo_name: thomas-qwertz/MDR
+# repo_url: https://github.com/thomas-qwertz/MDR
+edit_uri: https://github.com/thomas-qwertz/MDR/edit/main/docs/
+#copyright: &copy; 2024
 
 # Configuration
 theme:
   name: material
-  #custom_dir: material/overrides
+  custom_dir: overrides
   language: fr
   features:
     - announce.dismiss
@@ -50,7 +47,7 @@ theme:
     # - content.tabs.link
     - content.tooltips
     # - header.autohide
-    # - navigation.expand
+    - navigation.expand
     # - navigation.footer
     - navigation.indexes
     # - navigation.instant
@@ -70,67 +67,60 @@ theme:
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/link
-        name: Switch to light mode
+        icon: material/toggle-switch-off-outline
+        name: Passer en mode clair
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: indigo
+      primary: orange
+      accent: amber
       toggle:
         icon: material/toggle-switch-outline
-        name: Switch to dark mode
+        name: Passer en mode sombre
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: black
-      accent: indigo
+      primary: orange
+      accent: amber
       toggle:
-        icon: material/toggle-switch-off-outline
-        name: Switch to system preference
+        icon: fontawesome/solid/circle-half-stroke
+        name: Passer au mode par défaut du système
   font:
     text: Raleway
     code: Roboto Mono
-  # favicon: assets/favicon.png
+  logo: assets/logomdr.svg
+  favicon: assets/favicon.png
   icon:
-    logo: logo
+    logo: assets/logomdr.svg
     # repo: fontawesome/brands/git
-    edit: material/pencil 
-    view: material/eye
+    edit: material/file-edit-outline
+    view: material/file-eye-outline
+    annotation: material/information-slab-circle
+    admonition:
+      quote: material/comment-quote
+      references: octicons/list-unordered-16
 
 # Plugins
 plugins:
   - blog
   - tags:
-      tags_file: tags.md
+      tags_file: categories.md
   - search:
       separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   # - minify:
   #     minify_html: true
 
-# Hooks
-#hooks:
- # - material/overrides/hooks/shortcodes.py
- # - material/overrides/hooks/translations.py
-
 # Additional configuration
+extra_css:
+  - css-and-js/extra.css
+extra_javascript:
+  - css-and-js/extra.js
 extra:
   # generator: false
   status:
     new: Recently added
     deprecated: Deprecated
-  analytics:
-    provider: google
-    property: !ENV GOOGLE_ANALYTICS_KEY
   # social:
   #   - icon: fontawesome/brands/github
-  #     link: https://github.com/squidfunk
-  #   - icon: fontawesome/brands/docker
-  #     link: https://hub.docker.com/r/squidfunk/mkdocs-material/
-  #   - icon: fontawesome/brands/python
-  #     link: https://pypi.org/project/mkdocs-material/
-  #   - icon: fontawesome/brands/mastodon
-  #     link: https://fosstodon.org/@squidfunk
-  #   - icon: fontawesome/brands/twitter
-  #     link: https://twitter.com/squidfunk
+  #     link: https://github.com/xxx
 
 # Extensions
 markdown_extensions:
@@ -155,13 +145,14 @@ markdown_extensions:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
+  - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.magiclink:
       normalize_issue_symbols: true
       repo_url_shorthand: true
       user: thomas-qwertz
-      repo: test-mk
+      repo: MDR
   - pymdownx.mark
   - pymdownx.smartsymbols
   - pymdownx.snippets:
@@ -182,39 +173,65 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
-# Page tree
+# Page tree (chemins relatifs au dossier "docs/yy")
 nav:
-  - Home:
-    - Bibliothèque:
-      - lien1: dossier/page2.md
-      - lien2: dossier/page2.md
-      - page 3: page3.md
-  - Bibliothèque:
-    - nav:
-      - Installation: page2.md
-      - Page 2: page2.md
-      - Publishing your site: publishing-your-site.md
-      - Customization: customization.md
-    - Conventions: conventions.md
-    - Browser support: browser-support.md
-    - Enterprise feedback: enterprise-support.md
-    - Philosophy: philosophy.md
-    - Alternatives: alternatives.md
-    - License: license.md
-    - Changelog:
-      - changelog/index.md
-      - How to upgrade: upgrade.md
-    - Contributing:
-      - contributing/index.md
-      - Reporting a bug: contributing/reporting-a-bug.md
-      - Reporting a docs issue: contributing/reporting-a-docs-issue.md
-      - Requesting a change: contributing/requesting-a-change.md
-      - Adding translations: contributing/adding-translations.md
-      - Making a pull request: contributing/making-a-pull-request.md
-      - Asking a question: https://github.com/squidfunk/mkdocs-material/discussions
-    - Guides:
-      - Creating a reproduction: guides/creating-a-reproduction.md
-  - Blog:
-    - blog/index.md
-  - À propos: page2.md
-  - Contribuer/Discuter: page3.md
+  - Accueil: index.md
+  - Bibliothèque:  
+    - biblio/index.md
+    - Catégories: categories.md
+    - Liste complète:
+      - Bare Polycom: biblio/bare_polycom.md
+      - Budget colloques: biblio/budget_colloques.md
+      - Carte mentale: biblio/carte_mentale.md
+      - Classcraft: biblio/classcraft.md
+      - Concours de pitches: biblio/concours_de_pitches.md
+      - Dés de créativité: biblio/dés_de_créativité.md
+      - Document d'aide à la conception d'un jeu et production de traces: biblio/document_aide_conception_jeu_et_production_traces.md
+      - E-game flow: biblio/e_game_flow.md
+      - Echelle de mesure: biblio/echelle_de_mesure.md
+      - ELAN: biblio/elan.md
+      - Entretien: biblio/entretien.md
+      - Fiche de conception de jeu (type escape game): biblio/fiche_de_conception_jeu_type_escape_game.md
+      - Fiche d'observation (recherche collaborative): biblio/fiche_observation_recherche_collaborative.md
+      - Fichier de gestion pour la ROC: biblio/fichier_de_gestion_pour_la_roc.md
+      - Figma: biblio/figma.md
+      - Focus group: biblio/focus_group.md
+      - Formulaire de consentement (droit à l'image): biblio/formulaire_de_consentement_droit_image.md
+      - Formulation d'objectifs pédagogiques (d'un jeu): biblio/formulation_objectifs_pédagogiques_jeu.md
+      - Git: biblio/git.md
+      - Grille des salaires: biblio/grille_des_salaires.md
+      - Grille d'évaluation: biblio/grille_évaluation.md
+      - Jeu couteau - verres: biblio/jeu_couteau_verres.md
+      - KTBS4LA: biblio/ktbs4la.md
+      - LEGO Brainstorm: biblio/lego_brainstorm.md
+      - LEGO Design thinking: biblio/lego_design_thinking.md
+      - Lexique collaboratif: biblio/lexique_collaboratif.md
+      - Liste d'outils de création d'escape game: biblio/liste_outils_création_escape_game.md
+      - Listing des compétences: biblio/listing_des_compétences.md
+      - Mallette du parfait formateur: biblio/mallette_du_parfait_formateur.md
+      - Mandat graphiste: biblio/mandat_graphiste.md
+      - Modèle d'analyse des éléments partagés: biblio/modèle_analyse_des_éléments_partagés.md
+      - Modèle de cahier des charges: biblio/modèle_de_cahier_des_charges.md
+      - Modèle d'institutionnalisation: biblio/modèle_institutionnalisation.md
+      - Modèle intégration ludicisation dans la TD: biblio/modèle_intégration_ludicisation_dans_la_td.md
+      - Module d'évaluation: biblio/module_évaluation.md
+      - Outil de création de diagramme: biblio/outil_de_création_de_diagramme.md
+      - Persona: biblio/persona.md
+      - Plan de cours - modèle: biblio/plan_de_cours_modèle.md
+      - Post-it, organisation gestion de projet (Kanban - Ishikawa): biblio/post_it_organisation_gestion_de_projet_kanban_ishikawa.md
+      - Programming Game: biblio/programming_game.md
+      - Questionnaire: biblio/questionnaire.md
+      - Robot de téléprésence: biblio/robot_de_téléprésence.md
+      - Soumission Commission d'éthique: biblio/soumission_commission_éthique.md
+      - Template de documents officiels LIP: biblio/template_documents_officiels_lip.md
+      - Template note de frais: biblio/template_note_de_frais.md
+      - Trello: biblio/trello.md
+      - Usecase: biblio/usecase.md
+      - Verrous de la ROC: biblio/verrous_de_la_roc.md
+      - Wooclap: biblio/wooclap.md
+  #- Blog:
+  #  - blog/index.md
+  - Contribuer/Discuter:
+    - help/index.md
+    - Guide de contribution: help/guide.md
+  - À propos: help/apropos.md
