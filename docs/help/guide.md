@@ -267,3 +267,52 @@ Le terminal affichera alors l'URL à partir duquel vous pouvez prévisualiser le
 ### Pull, commit, push etc SANS GitHub
 
 Prérequis : Avoir installé [Git :octicons-link-external-16:](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git).
+
+1. Cloner le dépôt
+Pour obtenir une copie locale du projet MDR, utilisez la commande git clone :
+`git clone https://github.com/thomas-qwertz/MDR.git`
+Cela crée un dossier nommé MDR contenant tous les fichiers du projet.
+
+2. Travailler sur une branche
+Avant d'apporter des modifications, créez une nouvelle branche pour isoler votre travail :
+`git checkout -b nom-de-votre-branche`
+
+3. Effectuer des modifications
+Modifiez les fichiers localement en utilisant l'éditeur de texte ou de code de votre choix.
+
+4. Stager les changements
+Ajoutez les fichiers modifiés à l’index (staging area) avec la commande git add :
+`git add chemin/vers/fichier`
+Pour ajouter tous les fichiers modifiés :
+`git add .`
+
+5. Créer un commit
+Enregistrez vos changements avec un message descriptif :
+`git commit -m "Description de vos modifications"`
+
+6. Pousser les changements vers GitHub
+Envoyez vos modifications vers le dépôt distant (GitHub) sur votre branche :
+`git push origin nom-de-votre-branche`
+
+7. Créer une Pull Request
+Allez sur le dépôt GitHub via votre navigateur.
+Une notification apparaîtra pour créer une Pull Request à partir de votre branche récemment poussée.
+Cliquez sur "Compare & Pull Request", ajoutez une description et soumettez la Pull Request.
+
+Autres commandes utiles
+
+Mettre à jour votre copie locale (pull)
+Pour synchroniser votre copie locale avec les dernières modifications du dépôt distant :
+`git pull origin main`
+
+Voir le statut des fichiers
+Pour voir quels fichiers ont été modifiés ou ajoutés :
+`git status`
+
+Voir l'historique des commits
+Pour afficher les derniers commits du projet :
+`git log --oneline`
+
+Revenir à une version précédente
+Pour annuler des modifications non encore commit :
+`git checkout chemin/vers/fichier`
