@@ -22,13 +22,9 @@ La collaboration est au cœur du projet MDR. Si vous disposez d'expérience dans
 
 ## Modifier et ajouter des pages depuis GitHub
 
-Ce site est hébergé sur GitHub et généré automatiquement d'après les fichiers qui se trouvent dans le [dépôt du projet MDR :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR). 
+Ce site est hébergé sur GitHub et généré automatiquement d'après les fichiers qui se trouvent dans le [dépôt du projet MDR :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR). Vous pouvez contribuer et apporter des modifications aux pages. Voici comment faire :
 
-
-
-Vous pouvez contribuer et apporter des modifications aux pages. Voici comment faire :
-
-1. Allez sur notre dépôt GitHub à l'adresse [lien du dépôt].
+1. Rendez-vous sur le dépôt GitHub du projet (lien ci-dessus).
 2. Naviguez vers le fichier que vous souhaitez modifier. Les fichiers sont généralement dans le dossier `/docs`.
 3. Cliquez sur l'icône du crayon pour commencer à modifier le fichier.
 4. Après avoir apporté vos modifications, descendez vers le bas de la page et cliquez sur "Propose Changes". Donnez un titre et une description à vos modifications.
@@ -39,9 +35,36 @@ Note : Vous aurez besoin d'un compte GitHub pour effectuer ces actions. Si vous 
 
 ### Fonctionnement général de GitHub
 
+GitHub est une plateforme qui héberge des dépôts Git et facilite la collaboration sur le code. Pour ce projet, chaque contributeur travaille en local sur une copie du dépôt (clonée depuis GitHub) et peut synchroniser ses modifications avec le dépôt distant. Cela permet de suivre les changements, proposer des ajouts via des pull requests, et s'assurer que tout le monde travaille sur une base de code à jour.
+
+Pour en savoir plus, consultez les [guides de GitHub :octicons-link-external-16:](https://docs.github.com/en/get-started/start-your-journey/about-github-and-git).
+
 ### Syntaxe de base en Markdown (et/ou HTML)
 
+Les pages du projet sont principalement écrites en Markdown, un langage léger et simple pour formater du texte. Voici quelques éléments courants :
 
+**Titres :**<br>
+`# Titre principal`, `## Sous-titre`, `### Titre de niveau 3`.
+
+**Listes :**<br>
+À puces : `- Élément X` ou `* Élément Y`<br>
+Numérotées : `1. Élément 1`
+
+**Liens :**<br>
+`[Texte du lien](https://exemple.com)`
+
+**Images :**<br>
+`![Texte alternatif](chemin/vers/image.jpg)`
+
+**Texte enrichi :**<br>
+Gras : `**texte en gras**`<br>
+Italique : `*texte en italique*`<br>
+Code : ```` `exemple de code` ````<br>
+
+Vous pouvez aussi intégrer du HTML directement dans une syntaxe Markdown (le retour à la ligne `<br>` est par exemple très utile).
+
+Pour approfondir :<br>
+[Guide Markdown officiel :octicons-link-external-16:](https://www.markdownguide.org/basic-syntax/)
 
 
 
@@ -210,25 +233,32 @@ N'hésitez pas à consulter la [documentation GitHub :octicons-link-external-16:
         Si vous ne souhaitez pas approfondir vos l est donc **fortement** recommandé de faire appel à 
 
 ### Organiser les tâches à accomplir sur GitHub (issues et projects)
-[A VERIF]
+
 La gestion efficace des tâches et des idées est essentielle pour maintenir un projet structuré et favoriser une collaboration fluide entre les membres de la communauté. GitHub propose plusieurs outils utiles à cet effet.
 
-Issues
-Les issues (problèmes) permettent de signaler des bugs, proposer des améliorations ou discuter de nouvelles fonctionnalités. Elles sont essentielles pour suivre les points à résoudre ou les idées à développer.
+**Issues**
 
-Voici comment utiliser les issues efficacement :
+Les issues (problèmes) permettent de signaler des bugs, proposer des améliorations ou discuter de nouvelles fonctionnalités. Elles sont essentielles pour suivre les points à résoudre ou les idées à développer. Voici comment les utiliser efficacement :
 
-Créer une issue : Cliquez sur l'onglet "Issues" du dépôt, puis sur "New Issue". Fournissez un titre clair et une description détaillée du problème ou de la suggestion.
-Étiquettes (Labels) : Ajoutez des étiquettes pour catégoriser les issues (ex. : "Bug", "Amélioration", "Documentation").
-Assignations : Assignez l’issue à une ou plusieurs personnes pour indiquer qui en est responsable.
-Lien avec des pull requests : Lorsqu’une pull request résout une issue, liez-les pour faciliter le suivi (ex. : utilisez Fixes #numéro_de_l_issue dans la description de la pull request).
-Projects
+* Créer une issue : Cliquez sur l'onglet "Issues" du dépôt, puis sur "New Issue". Fournissez un titre clair et une description détaillée du problème ou de la suggestion.
+
+* Étiquettes (Labels) : Ajoutez des étiquettes pour catégoriser les issues (ex. : "Bug", "Amélioration", "Documentation").
+
+* Assignations : Assignez l’issue à une ou plusieurs personnes pour indiquer qui en est responsable.
+
+* Lien avec des pull requests : Lorsqu’une pull request résout une issue, liez-les pour faciliter le suivi (ex. : utilisez Fixes #numéro_de_l_issue dans la description de la pull request).
+
+**Projects**
+
 Les projects offrent une vue d’ensemble des tâches sous forme de tableaux Kanban, permettant de visualiser le statut de chaque tâche. Ils sont parfaits pour organiser les contributions à long terme ou structurer des sprints.
 
-Créer un project : Allez dans l'onglet "Projects" et cliquez sur "New Project".
-Colonnes typiques : Ajoutez des colonnes comme "À faire", "En cours", "Terminé".
-Cartes liées aux issues : Ajoutez les issues ou pull requests en tant que cartes dans les colonnes appropriées.
-Suivi de progression : Déplacez les cartes entre les colonnes pour refléter l’avancement des tâches.
+* Créer un project : Allez dans l'onglet "Projects" et cliquez sur "New Project".
+
+* Colonnes typiques : Ajoutez des colonnes comme "À faire", "En cours", "Terminé".
+
+* Cartes liées aux issues : Ajoutez les issues ou pull requests en tant que cartes dans les colonnes appropriées.
+
+* Suivi de progression : Déplacez les cartes entre les colonnes pour refléter l’avancement des tâches.
 Avec ces outils, l'équipe du projet MDR peut facilement prioriser les tâches, suivre les contributions et maintenir un workflow clair et efficace pour tous les membres.
 
 
@@ -244,7 +274,7 @@ Comme l'illustre cette page, il est possible d'ajouter divers éléments (encart
 
 ### Travailler en local / Prévisualiser le site
 
-Lorsqu'on consulte une page directement depuis le dépôt GitHub, en mode de visualisation "Preview", seuls les éléments en Markdown et/ou HTML sont rendus correctement. En revanche, les éléments liés aux fonctionnalités spécifiques de Material for MkDocs restent à l'état de texte car GitHub ne peut pas interprêter de frameworks. Pour éditer et prévisualiser des pages sous leur forme "finale", telles qu'elles apparaissent sur le site MDR, vous pouvez facilement créer votre propre version locale sur laquelle travailler avec l'éditeur de code de votre choix :
+Lorsqu'on consulte une page directement depuis le dépôt GitHub, en mode de visualisation "Preview", seuls les éléments en Markdown et/ou HTML sont rendus correctement. En revanche, les éléments liés aux fonctionnalités spécifiques de Material for MkDocs restent à l'état de texte car GitHub ne peut pas interprêter de frameworks. Pour éditer et prévisualiser des pages sous leur forme "finale", telles qu'elles apparaissent sur le site MDR, vous pouvez facilement créer votre propre version locale sur laquelle travailler avec l'éditeur de code de votre choix.
 
 Prérequis : Avoir installé [Python :octicons-link-external-16:](https://www.python.org/downloads/).
 
@@ -268,51 +298,51 @@ Le terminal affichera alors l'URL à partir duquel vous pouvez prévisualiser le
 
 Prérequis : Avoir installé [Git :octicons-link-external-16:](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git).
 
-1. Cloner le dépôt
-Pour obtenir une copie locale du projet MDR, utilisez la commande git clone :
-`git clone https://github.com/thomas-qwertz/MDR.git`
+:material-numeric-1-circle: **Cloner le dépôt**<br>
+Pour obtenir une copie locale du projet MDR, utilisez la commande git clone :<br>
+`git clone https://github.com/thomas-qwertz/MDR.git`<br>
 Cela crée un dossier nommé MDR contenant tous les fichiers du projet.
 
-2. Travailler sur une branche
-Avant d'apporter des modifications, créez une nouvelle branche pour isoler votre travail :
+:material-numeric-2-circle: **Travailler sur une branche**<br>
+Avant d'apporter des modifications, créez une nouvelle branche pour isoler votre travail :<br>
 `git checkout -b nom-de-votre-branche`
 
-3. Effectuer des modifications
+:material-numeric-3-circle: **Effectuer des modifications**<br>
 Modifiez les fichiers localement en utilisant l'éditeur de texte ou de code de votre choix.
 
-4. Stager les changements
-Ajoutez les fichiers modifiés à l’index (staging area) avec la commande git add :
-`git add chemin/vers/fichier`
-Pour ajouter tous les fichiers modifiés :
+:material-numeric-4-circle: **Stager les changements**<br>
+Ajoutez les fichiers modifiés à l’index (staging area) avec la commande git add :<br>
+`git add chemin/vers/fichier`<br>
+Pour ajouter tous les fichiers modifiés :<br>
 `git add .`
 
-5. Créer un commit
-Enregistrez vos changements avec un message descriptif :
+:material-numeric-5-circle: **Créer un commit**<br>
+Enregistrez vos changements avec un message descriptif :<br>
 `git commit -m "Description de vos modifications"`
 
-6. Pousser les changements vers GitHub
-Envoyez vos modifications vers le dépôt distant (GitHub) sur votre branche :
+:material-numeric-6-circle: **Pousser les changements vers GitHub**<br>
+Envoyez vos modifications vers le dépôt distant (GitHub) sur votre branche :<br>
 `git push origin nom-de-votre-branche`
 
-7. Créer une Pull Request
+:material-numeric-7-circle: **Créer une Pull Request**<br>
 Allez sur le dépôt GitHub via votre navigateur.
 Une notification apparaîtra pour créer une Pull Request à partir de votre branche récemment poussée.
 Cliquez sur "Compare & Pull Request", ajoutez une description et soumettez la Pull Request.
 
-Autres commandes utiles
+**Autres commandes utiles**
 
-Mettre à jour votre copie locale (pull)
-Pour synchroniser votre copie locale avec les dernières modifications du dépôt distant :
+* Mettre à jour votre copie locale (pull)<br>
+Pour synchroniser votre copie locale avec les dernières modifications du dépôt distant :<br>
 `git pull origin main`
 
-Voir le statut des fichiers
-Pour voir quels fichiers ont été modifiés ou ajoutés :
+* Voir le statut des fichiers<br>
+Pour voir quels fichiers ont été modifiés ou ajoutés :<br>
 `git status`
 
-Voir l'historique des commits
-Pour afficher les derniers commits du projet :
+* Voir l'historique des commits<br>
+Pour afficher les derniers commits du projet :<br>
 `git log --oneline`
 
-Revenir à une version précédente
-Pour annuler des modifications non encore commit :
+* Revenir à une version précédente<br>
+Pour annuler des modifications non encore commit :<br>
 `git checkout chemin/vers/fichier`
