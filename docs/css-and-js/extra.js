@@ -1,8 +1,8 @@
 ///// SCRIPT POUR RANDOM BACKGROUNDS /////
 
 // Initialisation du numéro d'image pour garantir la cohérence entre les thèmes
-//let currentImageNumber = Math.floor(Math.random() * 27) + 1;
-let currentImageNumber = 20;
+let currentImageNumber = Math.floor(Math.random() * 27) + 1;
+//let currentImageNumber = 12;
 
 function updateBackgroundImage() {
   const basePath = '../assets/backgrounds/'; // Assurez-vous que ce chemin est correct pour votre projet

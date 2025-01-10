@@ -107,7 +107,7 @@ Toutes autres remarques pertinentes.
 </div>
 1.  :fontawesome-solid-triangle-exclamation: Dans le code de votre nouvelle page, **supprimez les catégories qui ne correspondent pas à la ressource**.
 2.  Une petite image placée avant le titre de la page s'alignera avec ce dernier. Exemple : page [Persona](../biblio/persona.md).
-3.  Ajouter l'icône "**:octicons-link-external-16:**" (`:octicons-link-external-16:`) dans le texte d'un lien permet d'indiqueraux utilisateurs qu'il s'agit d'un **lien externe**.
+3.  Ajouter l'icône "**:octicons-link-external-16:**" (`:octicons-link-external-16:`) dans le texte d'un lien permet d'indiquer aux utilisateurs qu'il s'agit d'un **lien externe**.
 
 !!! warning "Ne pas oublier les catégories !"
 
@@ -169,13 +169,11 @@ MDR
     Pour assurer le bon fonctionnement du site, merci de ne pas modifier les fichiers hors du dossier `docs/biblio/`.<br>
     Si vous souhaitez proposer des changements non spécifiques aux ressources, ouvrez d'abord une [discussion :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR/discussions) pour en parler !
 
-## Édition "avancée"
+### Autres conventions
 
-### Fonctionnalités de Material for MkDocs
+* Ajouter l'icône "**:octicons-link-external-16:**" (`:octicons-link-external-16:`) dans le texte d'un lien permet d'indiquer aux utilisateurs qu'il s'agit d'un **lien externe**.
 
-Comme l'illustre cette page, il est possible d'ajouter divers éléments (encarts, annotations, tableaux, diagrammes, icônes, etc...) grâce à Material for MkDocs, le framework utilisé pour générer ce site. Consultez les pages de la [section "Reference" de Material for MkDocs :octicons-link-external-16:](https://squidfunk.github.io/mkdocs-material/reference/) pour en savoir plus et explorer les fonctionnalités à disposition.
-
-### Pull, commit, push etc SANS GitHub
+* Les contributions des personnes disposant des droits d'administration devraient **elles aussi** passer par des pull requests (et non pas "_Commit directly to the main branch_"), sauf s'il s'agit de modifications mineures (corrections orthographiques, mise à jour de lien...).
 
 ## Et après ? Tâches des administrateurs/responsables
 
@@ -183,32 +181,89 @@ La gestion et la révision des contributions reçues sur GitHub constituent une 
 
 ### Validation des contributions
 
-:material-numeric-0-circle: **Réception d'une Pull Request** : Lorsqu'une nouvelle contribution est soumise, elle apparaît dans la section [Pull Requests :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR/pulls) du dépôt GitHub du projet. Les administrateurs sont notifiés et peuvent commencer le processus d'examen.
+:octicons-git-pull-request-16: **Réception d'une pull request** : Lorsqu'une nouvelle contribution est soumise, elle apparaît dans la section [Pull requests :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR/pulls) du dépôt GitHub du projet. Les administrateurs sont notifiés et peuvent commencer le processus d'examen.
 
 :material-numeric-1-circle: **Vérification du contenu** : Assurez-vous que le contenu proposé est pertinent, exact, et apporte une valeur ajoutée au projet. Cela peut nécessiter une lecture approfondie du contenu, une vérification des faits, ou une consultation avec d'autres membres de la communauté. Vérifiez également que la pull request respecte les directives de contribution du projet, notamment en ce qui concerne la structure attendue du contenu, l'utilisation correcte du Markdown et la catégorisation adéquate. Si besoin, vous pouvez discuter avec la personne ayant contribué et lui demander d'effectuer des corrections. (1)
 { .annotate }
 
 1.  En cas de difficulté face à la complexité de l'interface, n'hésitez pas à consulter la [documentation GitHub :octicons-link-external-16:](https://docs.github.com/fr/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request) pour obtenir des explications détaillées.
 
-:material-numeric-2-circle: **Nouveau fichier ?** Vérifiez qu'il est **placé dans le bon dossier** au sein de l'arborescence du projet, conformément aux conventions établies (`docs/biblio/` pour les ressources et `docs/assets/images/` pour les images). Pour toute nouvelle page ressource, vérifiez qu'elle contient les tags de **catégories** appropriées en haut du fichier, comme indiqué dans la [structure attendue](#structure-de-page-attendue).
+!!! warning "Nouveaux fichiers"
+    En cas de nouveau fichier ajouté au dépôt, vérifiez qu'il est **placé dans le bon dossier** au sein de l'arborescence du projet, conformément aux conventions établies (`docs/biblio/` pour les ressources et `docs/assets/images/` pour les images). Pour toute nouvelle page ressource, vérifiez qu'elle contient les tags de **catégories** appropriées en haut du fichier, comme indiqué dans la [structure attendue](#structure-de-page-attendue).
 
-:material-numeric-3-circle: **Merge de la Pull Request** : Une fois que la pull request a été soigneusement examinée et que tous les ajustements nécessaires ont été apportés, elle peut alors être **fusionnée** dans la branche principale ("main") du dépôt. Cela mettra à jour le projet avec les contributions acceptées. (1)
+:material-numeric-2-circle: **Merge de la pull request** : Une fois que la pull request a été soigneusement examinée et que tous les ajustements nécessaires ont été apportés, elle peut alors être **fusionnée** dans la branche principale ("main") du dépôt. Cela mettra à jour le projet avec les contributions acceptées. (1)
 { .annotate }
 
 1.  :octicons-arrow-right-24: Onglet "Conversation" de la pull request ciblée :octicons-arrow-right-24: cliquez sur "**Squash and merge**".<br>
 N'hésitez pas à consulter la [documentation GitHub :octicons-link-external-16:](https://docs.github.com/fr/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request) pour obtenir des explications exhaustives sur cette procédure !
 
-:material-numeric-4-circle: **Mise à jour des fichiers `biblio/index.md` et `mkdocs.yml`** : Pour les nouvelles pages de ressources, il est nécessaire d'ajouter manuellement leurs liens dans le fichier `biblio/index.md` (qui correspond à la [liste des ressources par ordre alphabétique](../biblio/index.md)) et dans le fichier de configuration `mkdocs.yml` (pour que les liens apparaissent dans le menu de navigation du site MDR). En revanche, les nouvelles pages incluant des "tags" de catégories seront automatiquement listées dans la page [Catégories](../categories.md).
+:material-numeric-3-circle: **Mise à jour des fichiers `biblio/index.md` et `mkdocs.yml`** : Pour les nouvelles pages de ressources, il est nécessaire d'ajouter manuellement leurs liens dans le fichier `biblio/index.md` (qui correspond à la [liste des ressources par ordre alphabétique](../biblio/index.md)) et dans le fichier de configuration `mkdocs.yml` (pour que les liens apparaissent dans le menu de navigation du site MDR). En revanche, les nouvelles pages incluant des "tags" de catégories seront automatiquement listées dans la page [Catégories](../categories.md).
 
 
  Pour finir, il est toujours bon de s'assurer que la fusion est effectuée correctement et que le site est mis à jour pour refléter les nouveaux changements (après environ 30 secondes). En suivant ces lignes directrices, les administrateurs et responsables peuvent efficacement gérer les contributions au projet MDR, garantissant que le contenu reste de haute qualité, organisé, et utile pour la communauté.
 
+??? question "Comment annuler la fusion avec une pull request ?"
+    Pas de panique ! Le système Git est précisément conçu pour conserver un historique des modifications du dépôt. Dans le cas d'une pull request, un bouton "**Revert**" permet de créer une nouvelle pull request qui annulera les changements apportés par la pull request ciblée. Consultez la [documentation GitHub :octicons-link-external-16:](https://docs.github.com/fr/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/reverting-a-pull-request) qui vous guidera à travers cette procédure en quelques étapes simples.
+
+    !!! warning "Annuler des modifications effectuées SANS pull requests / Revenir à une version antérieure du dépôt"
+        En cas de changements directs sans pull requests (par exemple en choisissant l'option "_Commit directly to the main branch_" avant de valider un commit, ou lorsqu'on utilise la commande de terminal `push origin main`), il est toujours possible de revenir en arrière grâce à l'historique Git, mais cela nécessite d'utiliser des **commandes de terminal assez "risquées"** qui n'existent **pas** dans l'interface web de GitHub. En effet, **de telles manipulations peuvent aisément faire disparaître des mois de travail**, allant jusqu'à supprimer l'historique Git et même vos fichiers locaux synchronisés avec le dépôt !<br>
+        Si vous ne souhaitez pas approfondir vos l est donc **fortement** recommandé de faire appel à 
+
 ### Organiser les tâches à accomplir sur GitHub (issues et projects)
+[A VERIF]
+La gestion efficace des tâches et des idées est essentielle pour maintenir un projet structuré et favoriser une collaboration fluide entre les membres de la communauté. GitHub propose plusieurs outils utiles à cet effet.
+
+Issues
+Les issues (problèmes) permettent de signaler des bugs, proposer des améliorations ou discuter de nouvelles fonctionnalités. Elles sont essentielles pour suivre les points à résoudre ou les idées à développer.
+
+Voici comment utiliser les issues efficacement :
+
+Créer une issue : Cliquez sur l'onglet "Issues" du dépôt, puis sur "New Issue". Fournissez un titre clair et une description détaillée du problème ou de la suggestion.
+Étiquettes (Labels) : Ajoutez des étiquettes pour catégoriser les issues (ex. : "Bug", "Amélioration", "Documentation").
+Assignations : Assignez l’issue à une ou plusieurs personnes pour indiquer qui en est responsable.
+Lien avec des pull requests : Lorsqu’une pull request résout une issue, liez-les pour faciliter le suivi (ex. : utilisez Fixes #numéro_de_l_issue dans la description de la pull request).
+Projects
+Les projects offrent une vue d’ensemble des tâches sous forme de tableaux Kanban, permettant de visualiser le statut de chaque tâche. Ils sont parfaits pour organiser les contributions à long terme ou structurer des sprints.
+
+Créer un project : Allez dans l'onglet "Projects" et cliquez sur "New Project".
+Colonnes typiques : Ajoutez des colonnes comme "À faire", "En cours", "Terminé".
+Cartes liées aux issues : Ajoutez les issues ou pull requests en tant que cartes dans les colonnes appropriées.
+Suivi de progression : Déplacez les cartes entre les colonnes pour refléter l’avancement des tâches.
+Avec ces outils, l'équipe du projet MDR peut facilement prioriser les tâches, suivre les contributions et maintenir un workflow clair et efficace pour tous les membres.
 
 
 
 
 
 
+## Édition "avancée"
 
+### Fonctionnalités de Material for MkDocs
 
+Comme l'illustre cette page, il est possible d'ajouter divers éléments (encarts, annotations, tableaux, diagrammes, icônes, etc...) grâce à Material for MkDocs, le framework utilisé pour générer ce site. Consultez les pages de la [section "Reference" de Material for MkDocs :octicons-link-external-16:](https://squidfunk.github.io/mkdocs-material/reference/) pour en savoir plus et explorer les fonctionnalités à disposition.
+
+### Travailler en local / Prévisualiser le site
+
+Lorsqu'on consulte une page directement depuis le dépôt GitHub, en mode de visualisation "Preview", seuls les éléments en Markdown et/ou HTML sont rendus correctement. En revanche, les éléments liés aux fonctionnalités spécifiques de Material for MkDocs restent à l'état de texte car GitHub ne peut pas interprêter de frameworks. Pour éditer et prévisualiser des pages sous leur forme "finale", telles qu'elles apparaissent sur le site MDR, vous pouvez facilement créer votre propre version locale sur laquelle travailler avec l'éditeur de code de votre choix :
+
+Prérequis : Avoir installé [Python :octicons-link-external-16:](https://www.python.org/downloads/).
+
+:material-numeric-1-circle: Télécharger une [copie du dépôt MDR au format .zip](https://github.com/thomas-qwertz/MDR/archive/refs/heads/main.zip) et extraire les fichiers.
+
+:material-numeric-2-circle: Exécuter quelques commandes de terminal dans **la racine du dossier du projet local** (là où se trouve le dossier `/docs`) :
+
+<div class="grid" style="text-align:left" markdown>
+**a.** Installer Material for MkDocs en créant un environnement virtuel (à faire une seule fois) :<br>
+`python -m venv venv`<br>
+`pip install mkdocs-material`
+
+**b.** Activer l'environnement virtuel et générer le site (à faire à chaque session de travail) :<br>
+`.\venv\Scripts\activate`<br>
+`mkdocs serve`
+</div>
+
+Le terminal affichera alors l'URL à partir duquel vous pouvez prévisualiser le site.
+
+### Pull, commit, push etc SANS GitHub
+
+Prérequis : Avoir installé [Git :octicons-link-external-16:](https://git-scm.com/book/fr/v2/D%C3%A9marrage-rapide-Installation-de-Git).
