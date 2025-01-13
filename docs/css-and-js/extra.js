@@ -42,7 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // Ajouter un gestionnaire d'événement de clic à l'élément
       element.addEventListener('click', function() {
         // Rediriger l'utilisateur vers l'URL souhaitée
-        window.location.href = "../..";
+        //window.location.href = "../..";
+        if (window.location.href !== "https://thomas-qwertz.github.io/MDR/") {
+          window.location.href = "../..";
+        }
       });
     }
   });
