@@ -4,7 +4,7 @@ hide:
   - toc
 ---
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.38.4/css-doodle.min.js"></script>
+<script src="https://esm.sh/css-doodle/css-doodle.min.js?raw"></script>
 <style>
   @media screen and (max-width: 76.234375em) {
     css-doodle, #art-txt-svg {
@@ -132,9 +132,10 @@ hide:
     });
   }
   window.addEventListener('load', function() {
-    update();
+    //update();
+    setTimeout(update, 5000);
   });
-  // var interval = setInterval(update, 30000)
+  var interval = setInterval(update, 15000)
   document.addEventListener('click', function() {
   // clearInterval(interval)
   update()
