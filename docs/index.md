@@ -4,7 +4,7 @@ hide:
   - toc
 ---
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.38.4/css-doodle.min.js"></script>
+<script src="https://esm.sh/css-doodle/css-doodle.min.js?raw"></script>
 <style>
   @media screen and (max-width: 76.234375em) {
     css-doodle, #art-txt-svg {
