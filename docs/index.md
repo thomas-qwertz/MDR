@@ -141,4 +141,16 @@ hide:
   update()
   // interval = setInterval(update, 30000)
   })
+
+  // Redirection home pour header
+  document.addEventListener('DOMContentLoaded', function() {
+    var element = document.querySelector('body > header > nav > div.md-header__title > div > div:nth-child(1) > span');
+    if (element) {
+      element.style.cursor = 'pointer';
+      element.addEventListener('click', function() {
+        window.location.href = "https://thomas-qwertz.github.io/MDR/";
+      });
+    }
+});
+
 </script>

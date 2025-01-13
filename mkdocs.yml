@@ -27,7 +27,7 @@ site_description: >-
 
 # Repository
 repo_name: thomas-qwertz/MDR
-repo_url: https://github.com/thomas-qwertz/MDR
+#repo_url: https://github.com/thomas-qwertz/MDR
 edit_uri: https://github.com/thomas-qwertz/MDR/edit/main/docs/
 #copyright: &copy; 2025
 
