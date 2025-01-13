@@ -1,1 +1,1 @@
-contenu du readme ! 23h57
+Dépôt test pour le projet MDR.
