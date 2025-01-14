@@ -234,15 +234,15 @@ N'hésitez pas à consulter la [documentation GitHub :octicons-link-external-16:
 
 ### Organiser les tâches à accomplir sur GitHub (Projects)
 
-La gestion efficace des tâches et des idées est essentielle pour maintenir un projet structuré et favoriser une collaboration fluide entre les membres de la communauté. GitHub propose plusieurs outils utiles à cet effet.
+La gestion efficace des tâches et des idées est essentielle pour maintenir un projet structuré et favoriser une collaboration fluide.
 
-Les [projects :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR/projects) offrent une vue d’ensemble des tâches sous forme de tableaux Kanban, permettant de visualiser le statut de chaque tâche. Ils sont parfaits pour organiser les tâches et les contributions.
+Les [projects :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR/projects) offrent une vue d’ensemble des tâches sous différentes formes (tableaux, Kanbans, roadmaps, etc) permettant de visualiser le statut de chaque tâche. Ils sont parfaits pour organiser les contributions.
 
 * Créer un project : Allez dans l'onglet "Projects" et cliquez sur "New Project".
 
 * Colonnes typiques : Ajoutez des colonnes comme "À faire", "En cours", "Terminé".
 
-* Cartes liées aux issues : Ajoutez les issues ou pull requests en tant que cartes dans les colonnes appropriées.
+* Cartes liées aux pull requests : Ajoutez les pull requests en tant que cartes dans les colonnes appropriées.
 
 * Suivi de progression : Déplacez les cartes entre les colonnes pour refléter l’avancement des tâches.
 Avec ces outils, l'équipe du projet MDR peut facilement prioriser les tâches, suivre les contributions et maintenir un workflow clair et efficace pour tous les membres.
