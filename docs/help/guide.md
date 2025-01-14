@@ -230,27 +230,13 @@ N'hésitez pas à consulter la [documentation GitHub :octicons-link-external-16:
 
     !!! warning "Annuler des modifications effectuées SANS pull requests / Revenir à une version antérieure du dépôt"
         En cas de changements directs sans pull requests (par exemple en choisissant l'option "_Commit directly to the main branch_" avant de valider un commit, ou lorsqu'on utilise la commande de terminal `push origin main`), il est toujours possible de revenir en arrière grâce à l'historique Git, mais cela nécessite d'utiliser des **commandes de terminal assez "risquées"** qui n'existent **pas** dans l'interface web de GitHub. En effet, **de telles manipulations peuvent aisément faire disparaître des mois de travail**, allant jusqu'à supprimer l'historique Git et même vos fichiers locaux synchronisés avec le dépôt !<br>
-        Si vous ne souhaitez pas approfondir vos l est donc **fortement** recommandé de faire appel à 
+        Dans un tel cas, il est donc **fortement** recommandé de faire appel à une personne à l'aise avec Git afin de rétablir l'état souhaité du dépôt.
 
-### Organiser les tâches à accomplir sur GitHub (issues et projects)
+### Organiser les tâches à accomplir sur GitHub (Projects)
 
 La gestion efficace des tâches et des idées est essentielle pour maintenir un projet structuré et favoriser une collaboration fluide entre les membres de la communauté. GitHub propose plusieurs outils utiles à cet effet.
 
-**Issues**
-
-Les issues (problèmes) permettent de signaler des bugs, proposer des améliorations ou discuter de nouvelles fonctionnalités. Elles sont essentielles pour suivre les points à résoudre ou les idées à développer. Voici comment les utiliser efficacement :
-
-* Créer une issue : Cliquez sur l'onglet "Issues" du dépôt, puis sur "New Issue". Fournissez un titre clair et une description détaillée du problème ou de la suggestion.
-
-* Étiquettes (Labels) : Ajoutez des étiquettes pour catégoriser les issues (ex. : "Bug", "Amélioration", "Documentation").
-
-* Assignations : Assignez l’issue à une ou plusieurs personnes pour indiquer qui en est responsable.
-
-* Lien avec des pull requests : Lorsqu’une pull request résout une issue, liez-les pour faciliter le suivi (ex. : utilisez Fixes #numéro_de_l_issue dans la description de la pull request).
-
-**Projects**
-
-Les projects offrent une vue d’ensemble des tâches sous forme de tableaux Kanban, permettant de visualiser le statut de chaque tâche. Ils sont parfaits pour organiser les contributions à long terme ou structurer des sprints.
+Les [projects :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR/projects) offrent une vue d’ensemble des tâches sous forme de tableaux Kanban, permettant de visualiser le statut de chaque tâche. Ils sont parfaits pour organiser les tâches et les contributions.
 
 * Créer un project : Allez dans l'onglet "Projects" et cliquez sur "New Project".
 

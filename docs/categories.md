@@ -14,7 +14,10 @@ hide:
     page-break-inside: avoid;
     -webkit-column-break-inside: avoid;
     break-before: avoid;
-}
+  }
+  li {
+      text-align: left;
+  }
 </style>
 
 # Catégories

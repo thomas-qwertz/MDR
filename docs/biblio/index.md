@@ -166,5 +166,9 @@ hide:
 <div markdown>
 <h2><span class="md-tag">Z</span></h2>
 </div>
-
 </div>
+<style>
+  li {
+      text-align: left;
+  }
+</style>
