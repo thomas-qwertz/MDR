@@ -37,5 +37,5 @@
 
 === "Crédits"
     - Les contenus ont été rédigés par les chercheurs du [Laboratoire d'Innovation Pédagogique :octicons-link-external-16:](https://www.lip-unige.ch/) et les membres de la communauté.
-    - Le site a été conçu par [Thomas Goffin :octicons-link-external-16:](https://tecfaetu.unige.ch/perso/maltt/goffint9/) en utilisant [MkDocs :octicons-link-external-16:](https://www.mkdocs.org), un générateur de sites statiques, ainsi que [Material for MkDocs :octicons-link-external-16:](https://github.com/squidfunk/mkdocs-material), un framework permettant d'étendre les options de configuration de MkDocs. Il est hébergé sur [GitHub :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR).
+    - Le site a été conçu par [Thomas Goffin :octicons-link-external-16:](https://tecfaetu.unige.ch/perso/maltt/goffint9/) en utilisant [Material for MkDocs :octicons-link-external-16:](https://github.com/squidfunk/mkdocs-material). Il est hébergé sur [GitHub :octicons-link-external-16:](https://github.com/thomas-qwertz/MDR).
     - L'animation d'accueil a été réalisée avec [css-doodle :octicons-link-external-16:](https://css-doodle.com/) et les motifs de fond avec [pattern.monster :octicons-link-external-16:](https://github.com/catchspider2002/svelte-svg-patterns).
