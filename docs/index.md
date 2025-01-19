@@ -31,13 +31,12 @@ hide:
   .doodle-container {
     width: 100%;
     height: 29.6vw !important; /*28.29vw*/
-    border: 0px solid green;
     left: 0 !important;
   }
   css-doodle {
     position: absolute;
     width: 100%;
-    height: 41.22vw; /*44.58%*/
+    height: 41.39vw; /*44.58%*/ /*41.22vw*/
     left: 0;
     top: 4rem;
     margin-top: 0;
@@ -45,10 +44,9 @@ hide:
   #art-txt-svg {
   position: absolute;
   width: 100%;
-  height: 41.22vw;
+  /*height: 41.35vw; 41.22vw*/
   left: 0;
   top: 4rem;
-  border: 0px solid red;
   z-index: 0;
   overflow: hidden;
   mix-blend-mode: saturation;
@@ -65,6 +63,7 @@ hide:
     user-select: none;
     font-size: 1.52em !important;
     letter-spacing: 0 !important;
+    font-variant: small-caps;
   }
   .welcome-card .md-button {
     margin-top: 0.35rem !important;
@@ -81,7 +80,7 @@ hide:
     @grid: 36x15;
     opacity: calc(1.1 - 0.0712 * @y);
     background: var(--md-primary-fg-color);
-    margin: -0.19px;
+    margin: 0px; /*-0.19px*/
     transition: @r(0.5s, 1.5s) ease-out;
     clip-path: polygon(@pick(
     '0 0, 100% 0, 100% 100%',

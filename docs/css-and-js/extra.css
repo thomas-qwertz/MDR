@@ -19,6 +19,10 @@
     
 }
 
+html, body {
+    scrollbar-width: thin;
+}
+
 .md-main {
     padding-bottom: 1.3em;
     background-image: var(--background-image);
