@@ -31,7 +31,7 @@ hide:
   .doodle-container {
     width: 100%;
     height: 29.6vw !important; /*28.29vw*/
-    left: 0 !important;
+    left: 0 !important; 
   }
   css-doodle {
     position: absolute;
