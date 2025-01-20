@@ -15,7 +15,7 @@ xxx.
 
 ## Durée/moment d'utilisation
 
-xxx.
+truc.
 
 ## Limites
 
