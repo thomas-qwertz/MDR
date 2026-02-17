@@ -5,13 +5,20 @@ let currentImageNumber = Math.floor(Math.random() * 27) + 1;
 //let currentImageNumber = 12;
 
 function updateBackgroundImage() {
-  const basePath = '../assets/backgrounds/'; // Assurez-vous que ce chemin est correct pour votre projet
+  const scriptUrl =
+    (document.currentScript && document.currentScript.src) ||
+    Array.from(document.scripts).find(s => s.src && s.src.includes('css-and-js/extra.js'))?.src;
+
+  const basePath = scriptUrl
+    ? new URL('../assets/backgrounds/', scriptUrl).toString()
+    : '../assets/backgrounds/'; // fallback
+
   const isDarkMode = document.body.getAttribute('data-md-color-scheme') === 'slate';
   const modePrefix = isDarkMode ? 'dark-' : 'light-';
   const imageUrl = `${basePath}${modePrefix}bg${currentImageNumber}.svg`;
-  
-  document.documentElement.style.setProperty('--background-image', `url('${imageUrl}')`);
 
+  document.documentElement.style.setProperty('--background-image', `url('${imageUrl}')`);
+  
   console.log(`Background image set to: ${imageUrl}`);
 }
 
