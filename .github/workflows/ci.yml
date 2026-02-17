@@ -62,6 +62,6 @@ jobs:
 # auto-merger la PR
       - name: Auto-merge the sync PR (optional)
         if: steps.cpr.outputs.pull-request-number != ''
-        run: gh pr merge --merge --auto "${{ steps.cpr.outputs.pull-request-number }}"
+        run: gh pr merge --squash --auto "${{ steps.cpr.outputs.pull-request-number }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
