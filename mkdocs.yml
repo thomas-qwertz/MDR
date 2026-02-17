@@ -180,41 +180,42 @@ nav:
     - biblio/index.md
     - Catégories: categories.md
     - Liste complète:
+      # AUTO-GÉNÉRÉ — ne pas éditer à la main
       - Bare Polycom: biblio/bare_polycom.md
       - Budget colloques: biblio/budget_colloques.md
       - Carte mentale: biblio/carte_mentale.md
       - Classcraft: biblio/classcraft.md
       - Concours de pitches: biblio/concours_de_pitches.md
       - Dés de créativité: biblio/dés_de_créativité.md
-      - Document d'aide à la conception d'un jeu et production de traces: biblio/document_aide_conception_jeu_et_production_traces.md
+      - Document d'aide à la conception d'un jeu, et production de traces: biblio/document_aide_conception_jeu_et_production_traces.md
       - E-game flow: biblio/e_game_flow.md
-      - Echelle de mesure: biblio/echelle_de_mesure.md
+      - Échelle de mesure: biblio/echelle_de_mesure.md
       - ELAN: biblio/elan.md
       - Entretien: biblio/entretien.md
-      - Fiche de conception de jeu (type escape game): biblio/fiche_de_conception_jeu_type_escape_game.md
       - Fiche d'observation (recherche collaborative): biblio/fiche_observation_recherche_collaborative.md
+      - Fiche de conception de jeu (type escape game): biblio/fiche_de_conception_jeu_type_escape_game.md
       - Fichier de gestion pour la ROC: biblio/fichier_de_gestion_pour_la_roc.md
       - Figma: biblio/figma.md
       - Focus group: biblio/focus_group.md
       - Formulaire de consentement (droit à l'image): biblio/formulaire_de_consentement_droit_image.md
       - Formulation d'objectifs pédagogiques (d'un jeu): biblio/formulation_objectifs_pédagogiques_jeu.md
-      - Git: biblio/git.md
-      - Grille des salaires: biblio/grille_des_salaires.md
+      - GIT: biblio/git.md
       - Grille d'évaluation: biblio/grille_évaluation.md
+      - Grille des salaires: biblio/grille_des_salaires.md
       - Jeu couteau - verres: biblio/jeu_couteau_verres.md
       - KTBS4LA: biblio/ktbs4la.md
       - LEGO Brainstorm: biblio/lego_brainstorm.md
-      - LEGO Design thinking: biblio/lego_design_thinking.md
+      - LEGO Design Thinking: biblio/lego_design_thinking.md
       - Lexique collaboratif: biblio/lexique_collaboratif.md
       - Liste d'outils de création d'escape game: biblio/liste_outils_création_escape_game.md
       - Listing des compétences: biblio/listing_des_compétences.md
       - Mallette du parfait formateur: biblio/mallette_du_parfait_formateur.md
-      - Mandat graphiste: biblio/mandat_graphiste.md
-      - Modèle d'analyse des éléments partagés: biblio/modèle_analyse_des_éléments_partagés.md
+      - Mandat (graphiste): biblio/mandat_graphiste.md
       - Modèle de cahier des charges: biblio/modèle_de_cahier_des_charges.md
-      - Modèle d'institutionnalisation: biblio/modèle_institutionnalisation.md
-      - Modèle intégration ludicisation dans la TD: biblio/modèle_intégration_ludicisation_dans_la_td.md
-      - Module d'évaluation: biblio/module_évaluation.md
+      - Modèle d’analyse des éléments partagés: biblio/modèle_analyse_des_éléments_partagés.md
+      - Modèle d’institutionnalisation: biblio/modèle_institutionnalisation.md
+      - Modèle intégration Ludicisation dans la TD: biblio/modèle_intégration_ludicisation_dans_la_td.md
+      - Module d’évaluation: biblio/module_évaluation.md
       - Outil de création de diagramme: biblio/outil_de_création_de_diagramme.md
       - Persona: biblio/persona.md
       - Plan de cours - modèle: biblio/plan_de_cours_modèle.md
@@ -222,13 +223,13 @@ nav:
       - Programming Game: biblio/programming_game.md
       - Questionnaire: biblio/questionnaire.md
       - Robot de téléprésence: biblio/robot_de_téléprésence.md
-      - Soumission Commission d'éthique: biblio/soumission_commission_éthique.md
+      - Soumission Commission d'éthique université de genève: biblio/soumission_commission_éthique.md
       - Template de documents officiels LIP: biblio/template_documents_officiels_lip.md
       - Template note de frais: biblio/template_note_de_frais.md
       - Trello: biblio/trello.md
       - Usecase: biblio/usecase.md
       - Verrous de la ROC: biblio/verrous_de_la_roc.md
-      - Wooclap: biblio/wooclap.md
+      - WOOCLAP: biblio/wooclap.md
   #- Blog:
   #  - blog/index.md
   - Contribuer/Discuter:

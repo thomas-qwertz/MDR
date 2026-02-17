@@ -34,21 +34,21 @@ hide:
 <div markdown>
 <h2><span class="md-tag">D</span></h2>
 * [Dés de créativité](dés_de_créativité.md)
-* [Document d'aide à la conception d'un jeu et production de traces](document_aide_conception_jeu_et_production_traces.md)
+* [Document d'aide à la conception d'un jeu, et production de traces](document_aide_conception_jeu_et_production_traces.md)
 </div>
 
 <div markdown>
 <h2><span class="md-tag">E</span></h2>
 * [E-game flow](e_game_flow.md)
-* [Echelle de mesure](echelle_de_mesure.md)
+* [Échelle de mesure](echelle_de_mesure.md)
 * [ELAN](elan.md)
 * [Entretien](entretien.md)
 </div>
 
 <div markdown>
 <h2><span class="md-tag">F</span></h2>
-* [Fiche de conception de jeu (type escape game)](fiche_de_conception_jeu_type_escape_game.md)
 * [Fiche d'observation (recherche collaborative)](fiche_observation_recherche_collaborative.md)
+* [Fiche de conception de jeu (type escape game)](fiche_de_conception_jeu_type_escape_game.md)
 * [Fichier de gestion pour la ROC](fichier_de_gestion_pour_la_roc.md)
 * [Figma](figma.md)
 * [Focus group](focus_group.md)
@@ -58,9 +58,9 @@ hide:
 
 <div markdown>
 <h2><span class="md-tag">G</span></h2>
-* [Git](git.md)
-* [Grille des salaires](grille_des_salaires.md)
+* [GIT](git.md)
 * [Grille d'évaluation](grille_évaluation.md)
+* [Grille des salaires](grille_des_salaires.md)
 </div>
 
 <div markdown>
@@ -93,12 +93,12 @@ hide:
 <div markdown>
 <h2><span class="md-tag">M</span></h2>
 * [Mallette du parfait formateur](mallette_du_parfait_formateur.md)
-* [Mandat graphiste](mandat_graphiste.md)
-* [Modèle d'analyse des éléments partagés](modèle_analyse_des_éléments_partagés.md)
+* [Mandat (graphiste)](mandat_graphiste.md)
 * [Modèle de cahier des charges](modèle_de_cahier_des_charges.md)
-* [Modèle d'institutionnalisation](modèle_institutionnalisation.md)
-* [Modèle intégration ludicisation dans la TD](modèle_intégration_ludicisation_dans_la_td.md)
-* [Module d'évaluation](module_évaluation.md)
+* [Modèle d’analyse des éléments partagés](modèle_analyse_des_éléments_partagés.md)
+* [Modèle d’institutionnalisation](modèle_institutionnalisation.md)
+* [Modèle intégration Ludicisation dans la TD](modèle_intégration_ludicisation_dans_la_td.md)
+* [Module d’évaluation](module_évaluation.md)
 </div>
 
 <div markdown>
@@ -130,7 +130,7 @@ hide:
 
 <div markdown>
 <h2><span class="md-tag">S</span></h2>
-* [Soumission Commission d'éthique](soumission_commission_éthique.md)
+* [Soumission Commission d'éthique université de genève](soumission_commission_éthique.md)
 </div>
 
 <div markdown>
@@ -152,7 +152,7 @@ hide:
 
 <div markdown>
 <h2><span class="md-tag">W</span></h2>
-* [Wooclap](wooclap.md)
+* [WOOCLAP](wooclap.md)
 </div>
 
 <div markdown>
@@ -166,6 +166,7 @@ hide:
 <div markdown>
 <h2><span class="md-tag">Z</span></h2>
 </div>
+
 </div>
 <style>
   li {
