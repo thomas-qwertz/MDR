@@ -1,0 +1,51 @@
+# toute PR qui touche docs/biblio/** se voit ajouter automatiquement les changements sur mkdocs.yml + docs/biblio/index.md.
+# quand on merge une PR, on merge un seul objet cohérent : pas de commit post-merge surprise
+
+name: autogen-nav-index (PR)
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "docs/biblio/**"
+      - "mkdocs.yml"
+      - "overrides/auto_list_biblio-index.py"
+
+permissions:
+  contents: write
+
+jobs:
+  regen:
+    # ne marche pas sur forks (et ce n'est pas ton cas normalement)
+    if: >
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Install MkDocs Material
+        run: pip install mkdocs-material
+
+      - name: Regenerate menu + index
+        run: python overrides/auto_list_biblio-index.py
+
+      - name: Commit back to PR branch (if needed)
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add mkdocs.yml docs/biblio/index.md
+            git commit -m "chore: regenerate nav/index"
+            git push
+          else
+            echo "No generated changes."
+          fi
