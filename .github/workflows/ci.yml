@@ -1,34 +1,30 @@
 # Ce code permet à un bot (nommé "github-actions[bot]") de mettre à jour la branche "gh-pages", qui permet ensuite de mettre à jour le site web. Plus d'infos : https://squidfunk.github.io/mkdocs-material/publishing-your-site/
+# Quand on fait un commit direct sur main, le workflow reconstruit et déploie en utilisant les fichiers régénérés dans le workspace → le site ne sera pas “désynchronisé”
 
 name: ci
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 permissions:
   contents: write
 
 jobs:
   deploy:
-    # évite une boucle si le bot pousse un commit
+    # évite une boucle si un bot merge quelque chose
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure Git Credentials
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
 
       - run: echo "cache_id=$(date --utc '+%F')" >> $GITHUB_ENV
+
       - uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
@@ -39,18 +35,32 @@ jobs:
       - name: Install MkDocs Material
         run: pip install mkdocs-material
 
-      - name: Regenerate library (menu + index)
+      - name: Regenerate menu + index (workspace only)
         run: python overrides/auto_list_biblio-index.py
-
-      - name: Commit generated changes (if any)
-        run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git add mkdocs.yml docs/biblio/index.md
-            git commit -m "chore: regenerate library index/nav"
-            git push origin HEAD:main
-          else
-            echo "No generated changes to commit."
-          fi
 
       - name: Deploy site
         run: mkdocs gh-deploy --force
+
+# Si regen n’a rien changé → aucune PR.
+# Si regen a changé des trucs → une PR apparaît.
+      - name: Create PR to sync generated files (if needed)
+        id: cpr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "chore: sync generated nav/index"
+          title: "chore: sync generated nav/index"
+          body: |
+            PR auto suite à un commit direct sur main :
+            synchronise mkdocs.yml + docs/biblio/index.md.
+          branch: "bot/sync-nav-index"
+          delete-branch: true
+          add-paths: |
+            mkdocs.yml
+            docs/biblio/index.md
+
+# auto-merger la PR
+      - name: Auto-merge the sync PR (optional)
+        if: steps.cpr.outputs.pull-request-number != ''
+        run: gh pr merge --merge --auto "${{ steps.cpr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
