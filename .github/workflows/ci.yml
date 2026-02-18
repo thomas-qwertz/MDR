@@ -24,7 +24,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.x
+          python-version: "3.12"
 
       - run: echo "cache_id=$(date --utc '+%F')" >> $GITHUB_ENV
 
@@ -36,7 +36,7 @@ jobs:
             mkdocs-material-
 
       - name: Install MkDocs Material
-        run: pip install mkdocs-material
+        run: pip install "mkdocs-material==9.5.XX"
 
       - name: Regenerate menu + index (workspace only)
         run: python overrides/auto_list_biblio-index.py
@@ -44,8 +44,8 @@ jobs:
       - name: Deploy site
         run: mkdocs gh-deploy --force
 
-# Si regen n’a rien changé → aucune PR.
-# Si regen a changé des trucs → une PR apparaît.
+# Si regen n'a rien changé --> aucune PR
+# Si regen a changé des trucs --> une PR apparait
       - name: Create PR to sync generated files (if needed)
         id: cpr
         uses: peter-evans/create-pull-request@v8
