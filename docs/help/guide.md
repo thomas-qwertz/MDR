@@ -220,8 +220,6 @@ La gestion et la révision des contributions reçues sur GitHub constituent une 
 1.  :octicons-arrow-right-24: Onglet "Conversation" de la pull request ciblée :octicons-arrow-right-24: cliquez sur "**Squash and merge**".<br>
 N'hésitez pas à consulter la [documentation GitHub :octicons-link-external-16:](https://docs.github.com/fr/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request) pour obtenir des explications exhaustives sur cette procédure !
 
-:material-numeric-3-circle: **Mise à jour des fichiers `biblio/index.md` et `mkdocs.yml`** : Pour les nouvelles pages de ressources, il est nécessaire d'ajouter manuellement leurs liens dans le fichier `biblio/index.md` (qui correspond à la [liste des ressources par ordre alphabétique](../biblio/index.md)) et dans le fichier de configuration `mkdocs.yml` (pour que les liens apparaissent dans le menu de navigation du site MDR). En revanche, les nouvelles pages incluant des "tags" de catégories seront automatiquement listées dans la page [Catégories](../categories.md).
-
 
  Pour finir, il est toujours bon de s'assurer que la fusion est effectuée correctement et que le site est mis à jour pour refléter les nouveaux changements (après environ 30 secondes). En suivant ces lignes directrices, les administrateurs et responsables peuvent efficacement gérer les contributions au projet MDR, garantissant que le contenu reste de haute qualité, organisé, et utile pour la communauté.
 
