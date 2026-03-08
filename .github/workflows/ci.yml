@@ -1,77 +1,134 @@
 # Ce code permet à un bot (nommé "github-actions[bot]") de mettre à jour la branche "gh-pages", qui permet ensuite de mettre à jour le site web. Plus d'infos : https://squidfunk.github.io/mkdocs-material/publishing-your-site/
 # Quand on fait un commit direct sur main, le workflow reconstruit et déploie en utilisant les fichiers régénérés dans le workspace → le site ne sera pas “désynchronisé”
 
+# Nom du workflow (le nom visible dans l’onglet "Actions" de GitHub)
 name: ci
 
+# Déclenchement du workflow
 on:
-  push:
-    branches: [ main ]
+  # Se lance lorsqu'une Pull Request est ouverte ou mise à jour vers la branche main
+  pull_request:
+    branches:
+      - main
 
+  # Se lance lorsqu’un commit est poussé directement sur la branche main
+  push:
+    branches:
+      - main
+
+  # Permet de lancer le workflow manuellement depuis l’interface GitHub
+  workflow_dispatch:
+
+
+# Autorisations accordées au workflow
 permissions:
+  # Autorise le workflow à modifier des fichiers dans le dépôt
   contents: write
-  pull-requests: write
+
 
 jobs:
-  deploy:
-    # évite une boucle si un bot merge quelque chose
+
+  # Nom du job principal
+  quality-and-deploy:
+
+    # Évite que le workflow se relance lui-même lorsqu'il pousse un commit
     if: github.actor != 'github-actions[bot]'
+
+    # Machine virtuelle utilisée pour exécuter les étapes
     runs-on: ubuntu-latest
 
+
     steps:
-      - uses: actions/checkout@v4
+
+      # Étape 1 — Récupérer le dépôt dans l’environnement de travail
+      #
+      # Cas d’une Pull Request
+      - name: Checkout (pull request)
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v4
         with:
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-python@v5
+          fetch-depth: 0
+
+
+      # Même opération pour les autres cas (push ou lancement manuel)
+      - name: Checkout (push / manual)
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
+
+
+      # Étape 2 — Installer Python dans l’environnement
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
-      - run: echo "cache_id=$(date --utc '+%F')" >> $GITHUB_ENV
+          # Mise en cache des dépendances pour accélérer les builds
+          cache: "pip"
+          cache-dependency-path: requirements.txt
 
-      - uses: actions/cache@v4
-        with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: .cache
-          restore-keys: |
-            mkdocs-material-
 
-      - name: Install MkDocs Material
-        run: pip install 'mkdocs-material==9.7'
+      # Étape 3 — Installer les dépendances Python du projet
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Regenerate menu + index (workspace only)
-        run: python overrides/auto_list_biblio-index.py
 
-      - name: Deploy site
-        run: mkdocs gh-deploy --force
-
-# Si regen n'a rien changé --> aucune PR
-# Si regen a changé des trucs --> une PR apparait
-      - name: Create PR to sync generated files (if needed)
-        id: cpr
-        uses: peter-evans/create-pull-request@v8
-        with:
-          commit-message: "chore: sync generated nav/index"
-          title: "chore: sync generated nav/index"
-          body: |
-            PR auto suite à un commit direct sur main :
-            synchronise mkdocs.yml + docs/biblio/index.md.
-          branch: "bot/sync-nav-index"
-          delete-branch: true
-          add-paths: |
-            mkdocs.yml
-            docs/biblio/index.md
-
-# auto-merger la PR
-      - name: Auto-merge the sync PR (optional)
-        if: steps.cpr.outputs.pull-request-number != ''
+      # Étape 4 — Synchroniser automatiquement certains fichiers générés
+      #
+      # Cette étape ne s'exécute que lors d’un push sur main.
+      #
+      # Elle lance le script qui :
+      # - vérifie les ressources
+      # - met à jour l’index de la bibliothèque
+      # - met à jour la navigation du site
+      #
+      # Si ces fichiers changent, un commit automatique est créé.
+      - name: Synchronize generated files on main
+        if: github.event_name == 'push'
         run: |
-          changed_files=$(gh pr view "${{ steps.cpr.outputs.pull-request-number }}" --json files -q '.files[].path')
-          for f in $changed_files; do
-            if [[ "$f" == .github/workflows/* ]]; then
-              echo "Workflow file changed. Skipping auto-merge."
-              exit 0
-            fi
-          done
-          gh pr merge --squash "${{ steps.cpr.outputs.pull-request-number }}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          python overrides/auto_list_biblio-index.py --write
+
+          if [[ -n "$(git status --porcelain -- mkdocs.yml docs/biblio/index.md)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add mkdocs.yml docs/biblio/index.md
+            git commit -m "chore: regenerate library artifacts"
+            git push
+          fi
+
+
+      # Étape 5 — Vérifier que tous les fichiers générés sont à jour
+      #
+      # Si ce n’est pas le cas, la vérification échoue.
+      - name: Check generated files
+        run: python overrides/auto_list_biblio-index.py --check
+
+
+      # Étape 6 — Construire le site avec MkDocs
+      #
+      # Le mode "strict" fait échouer la construction si une erreur est détectée.
+      - name: Build site in strict mode
+        run: mkdocs build --strict
+
+
+      # Étape 7 — Pour les Pull Requests uniquement :
+      #
+      # On enregistre la version construite du site
+      # afin qu’elle puisse être téléchargée et inspectée.
+      - name: Upload build artifact for pull requests
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mdr-site-preview
+          path: site/
+          if-no-files-found: error
+
+
+      # Étape 8 — Déployer le site sur GitHub Pages
+      #
+      # Cette étape ne s’exécute que lors d’un push sur la branche main.
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push'
+        run: mkdocs gh-deploy --force
