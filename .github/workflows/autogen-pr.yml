@@ -1,52 +1,96 @@
 # toute PR qui touche docs/biblio/** se voit ajouter automatiquement les changements sur mkdocs.yml + docs/biblio/index.md.
 # quand on merge une PR, on merge un seul objet cohérent : pas de commit post-merge surprise
 
-name: autogen-nav-index (PR)
+# Nom du workflow (visible dans l’onglet "Actions" de GitHub)
+name: autogen-nav-index
 
+# Déclenchement du workflow
 on:
+  # Ce workflow s'exécute lorsqu'une Pull Request est ouverte ou modifiée
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+
+    # Il ne se déclenche que si certains fichiers sont modifiés
     paths:
       - "docs/biblio/**"
       - "mkdocs.yml"
       - "overrides/auto_list_biblio-index.py"
 
+
+# Autorisations accordées au workflow
 permissions:
+  # Permet au workflow de créer un commit dans la Pull Request
   contents: write
 
+
 jobs:
-  regen:
-    # ne marche pas sur forks
-    if: >
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      github.actor != 'github-actions[bot]'
+
+  # Job chargé de synchroniser les fichiers générés automatiquement
+  sync-generated-files:
+
+    # Conditions d’exécution :
+    #
+    # - la Pull Request doit provenir du même dépôt
+    #   (GitHub interdit de pousser des commits dans un fork)
+    #
+    # - le workflow ne doit pas être déclenché par github-actions lui-même
+    #   afin d’éviter une boucle infinie de commits
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'github-actions[bot]'
+
+    # Machine virtuelle utilisée pour exécuter le workflow
     runs-on: ubuntu-latest
 
+
     steps:
-      - uses: actions/checkout@v4
+
+      # Étape 1 — Récupérer la branche de la Pull Request
+      #
+      # On récupère directement la branche sur laquelle la Pull Request est basée,
+      # afin de pouvoir éventuellement y ajouter un commit automatique.
+      - name: Checkout pull request branch
+        uses: actions/checkout@v4
         with:
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref }}
           fetch-depth: 0
+          persist-credentials: true
 
-      - uses: actions/setup-python@v5
+
+      # Étape 2 — Installer Python dans l’environnement
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
-      - name: Install MkDocs Material
-        run: pip install 'mkdocs-material==9.7'
+          # Mise en cache des dépendances pour accélérer les exécutions suivantes
+          cache: "pip"
+          cache-dependency-path: requirements.txt
 
-      - name: Regenerate menu + index
-        run: python overrides/auto_list_biblio-index.py
 
-      - name: Commit back to PR branch (if needed)
+      # Étape 3 — Installer les dépendances Python du projet
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+
+      # Étape 4 — Régénérer les fichiers générés automatiquement
+      #
+      # Le script :
+      # - vérifie les fichiers de la bibliothèque
+      # - met à jour docs/biblio/index.md
+      # - met à jour la navigation dans mkdocs.yml
+      - name: Regenerate generated files
+        run: python overrides/auto_list_biblio-index.py --write
+
+
+      # Étape 5 — Si les fichiers générés ont changé,
+      # créer automatiquement un commit dans la Pull Request
+      - name: Commit generated files back to the pull request
         run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
+          if [[ -n "$(git status --porcelain -- mkdocs.yml docs/biblio/index.md)" ]]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add mkdocs.yml docs/biblio/index.md
-            git commit -m "chore: regenerate nav/index"
+            git commit -m "chore: regenerate library artifacts"
             git push
           else
             echo "No generated changes."
