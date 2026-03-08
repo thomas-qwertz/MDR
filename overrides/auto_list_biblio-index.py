@@ -1,318 +1,549 @@
 #!/usr/bin/env python3
-"""Regenerate MDR library artifacts.
+"""
+Vérifier les fichiers de ressources de la bibliothèque MDR et mettre à jour
+automatiquement certains fichiers dérivés.
 
-Goals
------
-- Keep **"Liste complète" in the left menu** (mkdocs.yml) but stop maintaining it by hand.
-- Keep **docs/biblio/index.md** (alphabetical list) but stop maintaining it by hand.
-- Only *signal* content problems (warnings), never block publishing.
-
-What gets regenerated
+Ce que fait ce script
 ---------------------
-- `docs/biblio/index.md`
-- The children of the `- Liste complète:` item in `mkdocs.yml`
 
-Content warnings (non-blocking)
-------------------------------
-- Missing H1 title
-- Missing YAML front matter `tags`
-- Tag == 'Non renseigné'
+Ce script examine les fichiers de ressources écrits en Markdown dans le dossier :
 
-Designed to run in GitHub Actions after checkout.
+    docs/biblio/
+
+Il réalise trois actions principales :
+
+1. Vérifie que chaque fichier est correctement structuré.
+2. Met à jour automatiquement la page d’index de la bibliothèque :
+       docs/biblio/index.md
+3. Met à jour la liste complète des ressources dans la navigation du site
+   (dans le fichier mkdocs.yml).
+
+L’objectif est de s’assurer que la liste publique des ressources correspond
+exactement aux fichiers présents dans le dossier.
+
+Pourquoi ce script existe
+-------------------------
+
+Le prototype MDR repose volontairement sur un système simple :
+
+- les ressources sont stockées dans des fichiers Markdown
+- un petit script automatise la création des listes et vérifie la cohérence
+
+Ainsi, il n’est pas nécessaire de mettre à jour manuellement plusieurs fichiers
+lorsqu’on ajoute ou modifie une ressource.
+
+Comment utiliser ce script
+--------------------------
+
+1. Mettre à jour les fichiers automatiquement :
+
+    python overrides/auto_list_biblio-index.py --write
+
+Cette commande :
+
+- vérifie les fichiers
+- met à jour l’index de la bibliothèque
+- met à jour la navigation dans mkdocs.yml
+
+2. Vérifier uniquement (sans modifier les fichiers) :
+
+    python overrides/auto_list_biblio-index.py --check
+
+Cette commande est utilisée par l’intégration continue (CI).
+Elle échoue si :
+
+- un fichier est mal structuré
+- un fichier généré n’est plus à jour
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from pathlib import Path
+import argparse
+import difflib
+import os
 import re
+import sys
 import unicodedata
+from dataclasses import dataclass, field
+from pathlib import Path
 
+try:
+    import yaml
+except ImportError as exc:
+    raise SystemExit(
+        "La bibliothèque PyYAML est nécessaire. Installez les dépendances avec : pip install -r requirements.txt"
+    ) from exc
 
-H1_RE = re.compile(r"(?m)^#\s+(.+?)\s*$")
-FRONT_MATTER_RE = re.compile(r"(?s)\A---\s*\n(.*?)\n---\s*\n", re.MULTILINE)
 
 DIGITS_HEADER = "０-９"
 
+AUTO_NAV_START = "# BEGIN AUTO-GENERATED LIBRARY NAV"
+AUTO_NAV_END = "# END AUTO-GENERATED LIBRARY NAV"
 
-def _strip_accents(s: str) -> str:
-    return "".join(
-        c for c in unicodedata.normalize("NFD", s)
-        if unicodedata.category(c) != "Mn"
-    )
+# Catégories autorisées pour les ressources
+ALLOWED_TAGS = (
+    "Administratif",
+    "Conception",
+    "Formation",
+    "Recherche",
+    "Usages multiples",
+    "Non renseigné",
+)
 
+# Sections recommandées dans les fiches ressources
+RECOMMENDED_SECTIONS = {
+    "Objectif": {"Objectif"},
+    "Durée/moment d'utilisation": {"Durée/moment d'utilisation"},
+    "Limites": {"Limites"},
+    "Remarques": {"Remarques"},
+    "Personnes ressources": {"Personnes ressources"},
+    "Lien vers la/les ressources": {
+        "Lien vers la/les ressources",
+        "Liens vers la/les ressources",
+        "Lien vers la ressource",
+        "Liens vers la ressource",
+    },
+}
 
-def _sort_key(title: str) -> str:
-    return _strip_accents(title).casefold().strip()
-
-
-def _group_key(title: str) -> str:
-    t = _strip_accents(title).strip()
-    if not t:
-        return "?"
-    c = t[0].upper()
-    if c.isdigit():
-        return DIGITS_HEADER
-    if "A" <= c <= "Z":
-        return c
-    return c  # fallback
-
-
-def _escape_gh_command(s: str) -> str:
-    # GitHub workflow commands need escaping for %, CR, LF.
-    return s.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
-
-
-def warn(file_rel: str, message: str, title: str = "MDR") -> None:
-    msg = _escape_gh_command(message)
-    print(f"::warning file={file_rel},line=1,title={title}::{msg}")
-
-
-def _extract_title(md_text: str) -> str | None:
-    m = H1_RE.search(md_text)
-    if not m:
-        return None
-    return m.group(1).strip()
-
-
-def _extract_tags(md_text: str) -> list[str] | None:
-    """
-    Minimal YAML front matter parser for 'tags:' only, to keep stdlib-only.
-    Expected shapes:
-      ---
-      tags:
-        - X
-        - Y
-      ---
-    or:
-      ---
-      tags: [X, Y]
-      ---
-    """
-    m = FRONT_MATTER_RE.match(md_text)
-    if not m:
-        return None
-    fm = m.group(1)
-
-    # Case 1: block list
-    block = re.search(r"(?m)^\s*tags\s*:\s*\n((?:\s*-\s*.*\n)+)", fm)
-    if block:
-        items = []
-        for line in block.group(1).splitlines():
-            line = line.strip()
-            if line.startswith("-"):
-                items.append(line[1:].strip())
-        return [t for t in items if t]
-
-    # Case 2: inline list
-    inline = re.search(r"(?m)^\s*tags\s*:\s*\[(.*?)\]\s*$", fm)
-    if inline:
-        raw = inline.group(1)
-        parts = [p.strip().strip("'\"") for p in raw.split(",")]
-        return [p for p in parts if p]
-
-    # Case 3: scalar (rare)
-    scalar = re.search(r"(?m)^\s*tags\s*:\s*(.+?)\s*$", fm)
-    if scalar:
-        v = scalar.group(1).strip().strip("'\"")
-        return [v] if v else []
-
-    return None
-
-
-def _yaml_quote_key(s: str) -> str:
-    """
-    Quote only when needed (keeps mkdocs.yml readable).
-    If unsure -> quote.
-    """
-    if s == "" or s.strip() != s:
-        return _yaml_dquote(s)
-    # safe-ish plain keys: letters, numbers, spaces, some punctuation incl accents
-    if re.fullmatch(r"[0-9A-Za-zÀ-ÖØ-öø-ÿ _()'’.,\-]+", s):
-        return s
-    # ':' and '#' etc => quote
-    return _yaml_dquote(s)
-
-
-def _yaml_dquote(s: str) -> str:
-    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+# Expressions utilisées pour analyser les fichiers Markdown
+FRONT_MATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.DOTALL)
+H1_RE = re.compile(r"(?m)^#\s+(.+?)\s*$")
+H2_RE = re.compile(r"(?m)^##\s+(.+?)\s*$")
 
 
 @dataclass(frozen=True)
 class Resource:
+    """Représente une ressource de la bibliothèque."""
+
     title: str
-    filename: str           # e.g. entretien.md
-    rel_path_docs: str      # e.g. docs/biblio/entretien.md
-    nav_path: str           # e.g. biblio/entretien.md
-    tags: list[str] | None
+    filename: str
+    file_path: Path
+    file_rel: str
+    nav_path: str
+    tags: list[str]
+    headings: list[str] = field(default_factory=list)
 
 
-def collect_resources(repo_root: Path, docs_dir: Path) -> list[Resource]:
+@dataclass(frozen=True)
+class Message:
+    """
+    Message de validation.
+
+    level :
+        "error"   → problème bloquant
+        "warning" → avertissement
+    """
+
+    level: str
+    file_rel: str
+    message: str
+    title: str = "MDR"
+
+
+def escape_gh_command(text: str) -> str:
+    """Formate un message pour GitHub Actions."""
+    return text.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
+def emit_message(msg: Message) -> None:
+    """
+    Affiche un message d’erreur ou d’avertissement.
+    Le format dépend de l’environnement (local ou GitHub Actions).
+    """
+    if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
+        escaped = escape_gh_command(msg.message)
+        prefix = f"::{msg.level} file={msg.file_rel},line=1,title={msg.title}::"
+        print(prefix + escaped)
+    else:
+        print(f"[{msg.level}] {msg.file_rel}: {msg.message}")
+
+
+def strip_accents(value: str) -> str:
+    """Supprime les accents pour faciliter le tri alphabétique."""
+    return "".join(
+        c for c in unicodedata.normalize("NFD", value) if unicodedata.category(c) != "Mn"
+    )
+
+
+def sort_key(title: str) -> str:
+    """Clé utilisée pour trier les titres."""
+    return strip_accents(title).casefold().strip()
+
+
+def group_key(title: str) -> str:
+    """Détermine la lettre de classement dans l’index."""
+    stripped = strip_accents(title).strip()
+    if not stripped:
+        return "?"
+    first = stripped[0].upper()
+    if first.isdigit():
+        return DIGITS_HEADER
+    if "A" <= first <= "Z":
+        return first
+    return first
+
+
+def yaml_dquote(value: str) -> str:
+    return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def yaml_key(value: str) -> str:
+    """Formate une clé YAML en évitant les erreurs de syntaxe."""
+    if not value:
+        return yaml_dquote(value)
+    if value.strip() != value:
+        return yaml_dquote(value)
+    if re.fullmatch(r"[0-9A-Za-zÀ-ÖØ-öø-ÿ _()'’.,\-]+", value):
+        return value
+    return yaml_dquote(value)
+
+
+def parse_front_matter(md_text: str) -> dict | None:
+    """Lit le bloc YAML situé en haut du fichier Markdown."""
+    match = FRONT_MATTER_RE.match(md_text)
+    if not match:
+        return None
+    raw = match.group(1)
+    loaded = yaml.safe_load(raw)
+    if loaded is None:
+        return {}
+    if not isinstance(loaded, dict):
+        raise ValueError("Le front matter YAML doit être un objet clé/valeur.")
+    return loaded
+
+
+def extract_title(md_text: str) -> str | None:
+    """Extrait le titre principal (#)."""
+    match = H1_RE.search(md_text)
+    return match.group(1).strip() if match else None
+
+
+def extract_h2_headings(md_text: str) -> list[str]:
+    """Extrait les sous-titres (##)."""
+    return [heading.strip() for heading in H2_RE.findall(md_text)]
+
+
+def normalize_tags(value: object) -> list[str]:
+    """Vérifie et normalise la liste des catégories."""
+    if isinstance(value, str):
+        candidates = [value]
+    elif isinstance(value, list):
+        candidates = value
+    else:
+        raise ValueError("La clé 'tags' doit être une chaîne ou une liste de chaînes.")
+
+    tags: list[str] = []
+    for item in candidates:
+        if not isinstance(item, str):
+            raise ValueError("Chaque tag doit être une chaîne de caractères.")
+        normalized = item.strip()
+        if normalized:
+            tags.append(normalized)
+
+    if not tags:
+        raise ValueError("La clé 'tags' est présente mais vide.")
+    return tags
+
+
+def collect_resources(repo_root: Path) -> tuple[list[Resource], list[Message]]:
+    """
+    Parcourt les fichiers Markdown de la bibliothèque et vérifie leur structure.
+    """
+    docs_dir = repo_root / "docs"
     biblio_dir = docs_dir / "biblio"
+    if not biblio_dir.exists():
+        raise SystemExit("Le dossier docs/biblio/ est introuvable.")
+
+    messages: list[Message] = []
     resources: list[Resource] = []
 
-    for md in sorted(biblio_dir.glob("*.md")):
-        if md.name.lower() == "index.md":
+    for md_file in sorted(biblio_dir.glob("*.md")):
+        if md_file.name.lower() == "index.md":
             continue
 
-        text = md.read_text(encoding="utf-8", errors="replace")
-        title = _extract_title(text)
+        file_rel = md_file.relative_to(repo_root).as_posix()
+        text = md_file.read_text(encoding="utf-8", errors="replace")
 
-        file_rel = str(md.relative_to(repo_root)).replace("\\", "/")
+        try:
+            front_matter = parse_front_matter(text)
+        except ValueError as exc:
+            messages.append(Message("error", file_rel, f"Front matter YAML invalide : {exc}"))
+            continue
+
+        if front_matter is None:
+            messages.append(
+                Message("error", file_rel, "Front matter YAML manquant (bloc '--- ... ---').")
+            )
+            continue
+
+        title = extract_title(text)
         if not title:
-            # fallback: filename -> title-like
-            fallback = md.stem.replace("_", " ").strip()
-            warn(file_rel, "Titre H1 introuvable. Fallback utilisé (nom de fichier).")
-            title = fallback
+            messages.append(Message("error", file_rel, "Titre principal (H1) introuvable."))
+            continue
 
-        tags = _extract_tags(text)
-        if tags is None:
-            warn(file_rel, "Aucun tag détecté dans le front matter YAML (tags: ...).")
-        else:
-            if any(t.strip().lower() == "non renseigné" for t in tags):
-                warn(file_rel, "Tag 'Non renseigné' présent (à clarifier).")
+        try:
+            tags = normalize_tags(front_matter.get("tags"))
+        except ValueError as exc:
+            messages.append(Message("error", file_rel, f"Tags invalides : {exc}"))
+            continue
+
+        invalid_tags = [tag for tag in tags if tag not in ALLOWED_TAGS]
+        if invalid_tags:
+            messages.append(
+                Message(
+                    "error",
+                    file_rel,
+                    "Catégorie(s) non reconnue(s) : "
+                    + ", ".join(sorted(invalid_tags))
+                    + ". Catégories autorisées : "
+                    + ", ".join(ALLOWED_TAGS)
+                    + ".",
+                )
+            )
+            continue
+
+        if len(set(tags)) != len(tags):
+            messages.append(
+                Message("warning", file_rel, "Des catégories sont présentes en double.")
+            )
+
+        if "Non renseigné" in tags:
+            messages.append(
+                Message(
+                    "warning",
+                    file_rel,
+                    "Le tag 'Non renseigné' est encore présent ; une catégorisation plus précise serait préférable.",
+                )
+            )
+
+        headings = extract_h2_headings(text)
+
+        for canonical, aliases in RECOMMENDED_SECTIONS.items():
+            if not any(heading in aliases for heading in headings):
+                messages.append(
+                    Message(
+                        "warning",
+                        file_rel,
+                        f"Rubrique recommandée absente : '{canonical}'.",
+                    )
+                )
 
         resources.append(
             Resource(
                 title=title,
-                filename=md.name,
-                rel_path_docs=file_rel,
-                nav_path=f"biblio/{md.name}",
+                filename=md_file.name,
+                file_path=md_file,
+                file_rel=file_rel,
+                nav_path=f"biblio/{md_file.name}",
                 tags=tags,
+                headings=headings,
             )
         )
 
-    # sort by title (accent-insensitive)
-    resources.sort(key=lambda r: _sort_key(r.title))
-    return resources
+    seen_titles: dict[str, str] = {}
+    for resource in sorted(resources, key=lambda item: sort_key(item.title)):
+        normalized = sort_key(resource.title)
+        if normalized in seen_titles:
+            messages.append(
+                Message(
+                    "error",
+                    resource.file_rel,
+                    f"Titre dupliqué : '{resource.title}' déjà utilisé dans {seen_titles[normalized]}.",
+                )
+            )
+        else:
+            seen_titles[normalized] = resource.file_rel
+
+    resources.sort(key=lambda item: sort_key(item.title))
+    return resources, messages
 
 
-def regen_mkdocs_nav(repo_root: Path, mkdocs_path: Path, resources: list[Resource]) -> bool:
+def render_index(resources: list[Resource]) -> str:
     """
-    Replaces ONLY the children of the '- Liste complète:' node.
-    Everything else in mkdocs.yml stays as-is.
+    Génère automatiquement la page index de la bibliothèque.
     """
-    text = mkdocs_path.read_text(encoding="utf-8", errors="replace")
-    lines = text.splitlines(keepends=True)
-
-    # Locate '- Liste complète:'
-    start = None
-    for i, line in enumerate(lines):
-        if line.strip() == "- Liste complète:":
-            start = i
-            break
-    if start is None:
-        # this is an automation contract: if it disappears, we want to know
-        raise SystemExit("ERROR: Cannot find '- Liste complète:' in mkdocs.yml")
-
-    start_indent = len(lines[start]) - len(lines[start].lstrip(" "))
-    child_indent = start_indent + 2
-
-    # Find end of that block: first non-empty line with indent <= start_indent
-    end = start + 1
-    while end < len(lines):
-        if lines[end].strip() == "":
-            end += 1
-            continue
-        indent = len(lines[end]) - len(lines[end].lstrip(" "))
-        if indent <= start_indent:
-            break
-        end += 1
-
-    new_block = []
-    new_block.append(" " * child_indent + "# AUTO-GÉNÉRÉ — ne pas éditer à la main\n")
-    for r in resources:
-        key = _yaml_quote_key(r.title)
-        new_block.append(" " * child_indent + f"- {key}: {r.nav_path}\n")
-
-    new_lines = lines[: start + 1] + new_block + lines[end:]
-    new_text = "".join(new_lines)
-
-    if new_text == text:
-        return False
-
-    mkdocs_path.write_text(new_text, encoding="utf-8")
-    return True
-
-
-def regen_biblio_index(repo_root: Path, index_path: Path, resources: list[Resource]) -> bool:
     groups: dict[str, list[Resource]] = {DIGITS_HEADER: []}
-    for c in [chr(i) for i in range(ord("A"), ord("Z") + 1)]:
-        groups[c] = []
+    for letter in [chr(code) for code in range(ord("A"), ord("Z") + 1)]:
+        groups[letter] = []
 
-    for r in resources:
-        g = _group_key(r.title)
-        if g not in groups:
-            # ignore exotic groups in the index (or map them if you prefer)
-            continue
-        groups[g].append(r)
+    for resource in resources:
+        bucket = group_key(resource.title)
+        if bucket in groups:
+            groups[bucket].append(resource)
 
-    def block(letter: str, items: list[Resource], first: bool) -> str:
-        style = ' style="margin-top: 0"' if first else ""
-        out = []
-        out.append("<div markdown>\n")
-        out.append(f"<h2{style}><span class=\"md-tag\">{letter}</span></h2>\n")
-        for it in items:
-            out.append(f"* [{it.title}]({it.filename})\n")
-        out.append("</div>\n\n")
-        return "".join(out)
-
-    out_lines = [
-        "---\n",
-        "hide:\n",
-        "  - toc\n",
-        "---\n\n",
-        "# Bibliothèque des ressources\n",
-        "<!-- (chemins relatifs au dossier \"biblio/\") -->\n\n",
-        f"{len(resources)} ressources utiles à la recherche, triées par ordre alphabétique ou par [catégories](../categories.md) :\n\n",
-        "<div class=\"two-columns\" style=\"margin-top:1.5rem\" markdown>\n\n",
+    lines: list[str] = [
+        "---",
+        "hide:",
+        "  - toc",
+        "---",
+        "",
+        "# Bibliothèque des ressources",
+        "",
+        f"{len(resources)} ressources utiles à la recherche, triées par ordre alphabétique ou par [catégories](../categories.md) :",
+        "",
     ]
 
-    out_lines.append(block(DIGITS_HEADER, groups[DIGITS_HEADER], first=True))
-    for c in [chr(i) for i in range(ord("A"), ord("Z") + 1)]:
-        out_lines.append(block(c, groups[c], first=False))
+    for letter in [DIGITS_HEADER] + [chr(code) for code in range(ord("A"), ord("Z") + 1)]:
+        lines.append(f"## {letter}")
+        lines.append("")
+        for resource in groups[letter]:
+            lines.append(f"* [{resource.title}]({resource.filename})")
+        lines.append("")
 
-    out_lines += [
-        "</div>\n",
-        "<style>\n",
-        "  li {\n",
-        "      text-align: left;\n",
-        "  }\n",
-        "</style>\n",
-    ]
+    return "\n".join(lines).rstrip() + "\n"
 
-    new_text = "".join(out_lines)
-    old_text = index_path.read_text(encoding="utf-8", errors="replace") if index_path.exists() else ""
 
-    if old_text == new_text:
+def render_nav_block(resources: list[Resource], indent: str) -> str:
+    """Génère la liste complète des ressources pour mkdocs.yml."""
+    return "".join(
+        f"{indent}- {yaml_key(resource.title)}: {resource.nav_path}\n" for resource in resources
+    )
+
+
+def replace_nav_block(mkdocs_text: str, resources: list[Resource]) -> str:
+    """
+    Remplace dans mkdocs.yml la section auto-générée contenant
+    la liste complète des ressources.
+    """
+    lines = mkdocs_text.splitlines(keepends=True)
+
+    start_idx = end_idx = None
+    for idx, line in enumerate(lines):
+        if AUTO_NAV_START in line:
+            start_idx = idx
+        if AUTO_NAV_END in line:
+            end_idx = idx
+            break
+
+    if start_idx is None or end_idx is None or end_idx <= start_idx:
+        raise SystemExit(
+            "Le bloc auto-généré de mkdocs.yml est introuvable. "
+            f"Les marqueurs '{AUTO_NAV_START}' et '{AUTO_NAV_END}' sont requis."
+        )
+
+    indent = re.match(r"^(\s*)", lines[start_idx]).group(1)
+    new_block = render_nav_block(resources, indent)
+
+    return "".join(lines[: start_idx + 1]) + new_block + "".join(lines[end_idx:])
+
+
+def write_if_changed(path: Path, content: str) -> bool:
+    """Écrit un fichier uniquement si son contenu a changé."""
+    current = path.read_text(encoding="utf-8", errors="replace") if path.exists() else ""
+    if current == content:
         return False
-
-    index_path.write_text(new_text, encoding="utf-8")
+    path.write_text(content, encoding="utf-8")
     return True
 
 
-def main() -> int:
+def current_nav_block(mkdocs_text: str) -> str:
+    """Extrait le bloc de navigation auto-généré actuel."""
+    lines = mkdocs_text.splitlines(keepends=True)
+    start_idx = end_idx = None
+    for idx, line in enumerate(lines):
+        if AUTO_NAV_START in line:
+            start_idx = idx
+        if AUTO_NAV_END in line:
+            end_idx = idx
+            break
+    if start_idx is None or end_idx is None or end_idx <= start_idx:
+        return ""
+    return "".join(lines[start_idx + 1 : end_idx])
+
+
+def unified_diff(label: str, current: str, expected: str) -> str:
+    """Affiche les différences entre deux versions d’un fichier."""
+    return "".join(
+        difflib.unified_diff(
+            current.splitlines(keepends=True),
+            expected.splitlines(keepends=True),
+            fromfile=f"{label} (actuel)",
+            tofile=f"{label} (attendu)",
+        )
+    )
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--check", action="store_true", help="Vérifie sans écrire.")
+    mode.add_argument("--write", action="store_true", help="Régénère les fichiers.")
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv or sys.argv[1:])
+    check_mode = args.check and not args.write
+
     repo_root = Path(__file__).resolve().parents[1]
     mkdocs_path = repo_root / "mkdocs.yml"
-    docs_dir = repo_root / "docs"
-    biblio_index = docs_dir / "biblio" / "index.md"
+    index_path = repo_root / "docs" / "biblio" / "index.md"
 
-    resources = collect_resources(repo_root, docs_dir)
+    resources, messages = collect_resources(repo_root)
 
-    changed_nav = regen_mkdocs_nav(repo_root, mkdocs_path, resources)
-    changed_index = regen_biblio_index(repo_root, biblio_index, resources)
+    for message in messages:
+        emit_message(message)
 
-    if changed_nav or changed_index:
-        updated = []
-        if changed_nav:
-            updated.append("mkdocs.yml")
-        if changed_index:
-            updated.append("docs/biblio/index.md")
-        print("[regen] Updated files: " + " ".join(updated))
+    error_count = sum(1 for msg in messages if msg.level == "error")
+    warning_count = sum(1 for msg in messages if msg.level == "warning")
+
+    if error_count:
+        print(f"[mdr] {error_count} erreur(s) bloquante(s), {warning_count} avertissement(s).")
+        return 1
+
+    expected_index = render_index(resources)
+    current_index = index_path.read_text(encoding="utf-8", errors="replace") if index_path.exists() else ""
+
+    mkdocs_current = mkdocs_path.read_text(encoding="utf-8", errors="replace")
+    mkdocs_expected = replace_nav_block(mkdocs_current, resources)
+
+    stale_files: list[str] = []
+
+    if current_index != expected_index:
+        stale_files.append("docs/biblio/index.md")
+
+    if current_nav_block(mkdocs_current) != current_nav_block(mkdocs_expected):
+        stale_files.append("mkdocs.yml")
+
+    if check_mode:
+        if stale_files:
+            print(
+                "[mdr] Fichiers générés obsolètes : "
+                + ", ".join(stale_files)
+                + ". Lancez : python overrides/auto_list_biblio-index.py --write"
+            )
+
+            if "mkdocs.yml" in stale_files:
+                print(
+                    unified_diff(
+                        "mkdocs.yml",
+                        current_nav_block(mkdocs_current),
+                        current_nav_block(mkdocs_expected),
+                    )
+                )
+
+            if "docs/biblio/index.md" in stale_files:
+                print(unified_diff("docs/biblio/index.md", current_index, expected_index))
+
+            return 1
+
+        print(f"[mdr] Vérification OK : {len(resources)} ressource(s), {warning_count} avertissement(s).")
+        return 0
+
+    changed: list[str] = []
+
+    if write_if_changed(index_path, expected_index):
+        changed.append("docs/biblio/index.md")
+
+    if write_if_changed(mkdocs_path, mkdocs_expected):
+        changed.append("mkdocs.yml")
+
+    if changed:
+        print("[mdr] Fichiers mis à jour : " + ", ".join(changed))
     else:
-        print("[regen] Nothing to update")
+        print("[mdr] Aucun changement nécessaire.")
 
-    # Important: never fail the pipeline due to content warnings.
+    print(f"[mdr] {len(resources)} ressource(s), {warning_count} avertissement(s).")
     return 0
 
 

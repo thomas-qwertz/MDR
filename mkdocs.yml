@@ -4,8 +4,7 @@
 # of this software and associated documentation files (the "Software"), to
 # deal in the Software without restriction, including without limitation the
 # rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-# sell copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
+# sell copies of the Software, and to permit persons to do so, subject to the following conditions:
 
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
@@ -44,12 +43,12 @@ theme:
     - content.code.copy
     # - content.code.select
     # - content.footnote.tooltips
-    # - content.tabs.link
+    - content.tabs.link
     - content.tooltips
     # - header.autohide
     - navigation.expand
     # - navigation.footer
-    - navigation.indexes
+    # - navigation.indexes
     # - navigation.instant
     # - navigation.instant.prefetch
     # - navigation.instant.progress
@@ -57,12 +56,12 @@ theme:
     # - navigation.sections
     - navigation.tabs
     # - navigation.tabs.sticky
-    - navigation.top
+    # - navigation.top
     # - navigation.tracking
     - search.highlight
     # - search.share
-    - search.suggest
-    - toc.follow
+    # - search.suggest
+    # - toc.follow
     # - toc.integrate
   palette:
     - media: "(prefers-color-scheme)"
@@ -108,6 +107,12 @@ plugins:
   # - minify:
   #     minify_html: true
 
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
 # Additional configuration
 extra_css:
   - css-and-js/extra.css
@@ -145,7 +150,6 @@ markdown_extensions:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
-  - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.magiclink:
@@ -176,11 +180,11 @@ markdown_extensions:
 # Page tree (chemins relatifs au dossier "docs/yy")
 nav:
   - Accueil: index.md
-  - Bibliothèque:  
-    - biblio/index.md
-    - Catégories: categories.md
-    - Liste complète:
-      # AUTO-GÉNÉRÉ — ne pas éditer à la main
+  - Bibliothèque:
+      - biblio/index.md
+  - Catégories: categories.md
+  - Liste complète:
+      # BEGIN AUTO-GENERATED LIBRARY NAV
       - Bare Polycom: biblio/bare_polycom.md
       - Budget colloques: biblio/budget_colloques.md
       - Carte mentale: biblio/carte_mentale.md
@@ -230,9 +234,8 @@ nav:
       - Usecase: biblio/usecase.md
       - Verrous de la ROC: biblio/verrous_de_la_roc.md
       - WOOCLAP: biblio/wooclap.md
-  #- Blog:
-  #  - blog/index.md
+      # END AUTO-GENERATED LIBRARY NAV
   - Contribuer/Discuter:
-    - help/index.md
-    - Guide de contribution: help/guide.md
+      - help/index.md
+      - Guide de contribution: help/guide.md
   - À propos: help/apropos.md
