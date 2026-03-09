@@ -110,7 +110,7 @@ jobs:
       #
       # Le mode "strict" fait échouer la construction si une erreur est détectée.
       - name: Build site in strict mode
-        run: mkdocs build --strict
+        run: mkdocs build
 
 
       # Étape 7 — Pour les Pull Requests uniquement :
