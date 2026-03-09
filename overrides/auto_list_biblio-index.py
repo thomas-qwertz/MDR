@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Vérifier les fichiers de ressources de la bibliothèque MDR et mettre à jour
-automatiquement certains fichiers dérivés.
+automatiquement certains fichiers dérivés..
 
 Ce que fait ce script
 ---------------------
