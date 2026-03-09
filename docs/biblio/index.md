@@ -3,7 +3,7 @@ hide:
   - toc
 ---
 
-# Bibliothèque des ressources
+# Bibliothèque des ressources.
 
 49 ressources utiles à la recherche, triées par ordre alphabétique ou par [catégories](../categories.md) :
 
