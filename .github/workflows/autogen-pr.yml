@@ -1,7 +1,7 @@
 # toute PR qui touche docs/biblio/** se voit ajouter automatiquement les changements sur mkdocs.yml + docs/biblio/index.md.
 # quand on merge une PR, on merge un seul objet cohérent : pas de commit post-merge surprise
 
-# Nom du workflow (visible dans l’onglet "Actions" de GitHub)
+# Nom du workflow (visible dans l’onglet "Actions" de GitHub).
 name: autogen-nav-index
 
 # Déclenchement du workflow
