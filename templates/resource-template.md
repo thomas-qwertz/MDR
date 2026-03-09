@@ -1,6 +1,6 @@
 ---
 tags:
-  # Remplacer par une ou plusieurs catégories autorisées :
+  # Remplacer par une ou plusieurs catégories autorisées :.
   # Administratif, Conception, Formation, Recherche, Usages multiples, Non renseigné
   - Recherche
 ---
