@@ -176,13 +176,13 @@ MDR
 3.  `assets/` : Dossier pour divers fichiers nécessaires au site (logo, backgrounds, etc).
 4.  `images/` : Dossier où stocker **les images utilisées dans les documents.** :material-check-decagram:
 5.  `biblio/` : **Dossier qui contient les pages de chaque ressource du projet MDR.** :material-check-decagram:
-6.  `index.md` : La page `index.md` du dossier `biblio/` est la page qui regroupe la liste des ressources classées par ordre alphabétique (à updater lorsqu'une nouvelle ressource est ajoutée). Les autres pages sont **les ressources** elles-mêmes.
+6.  `index.md` : La page `index.md` du dossier `biblio/` est la page qui regroupe la liste des ressources classées par ordre alphabétique (*updatée automatiquement* lorsqu'une nouvelle ressource est ajoutée). Les autres pages sont **les ressources** elles-mêmes.
 7.  `css-and-js/` : Dossier pour les fichiers CSS et JavaScript personnalisés du site.
 8.  `help/` : Dossier qui contient les pages d'information et d'assistance, telles que ce guide.
 9.  `apropos.md` : La page "À propos" du site 🙂
 10.  `guide.md` : La présente page 🙂
 11.  `index.md` : La page `index.md` du dossier `help/` correspond à la page "Contribuer/Discuter" du site.
-12.  `categories.md` : Page listant les différentes catégories de ressources (updatée automatiquement si des "tags" sont présentes dans la page d'une ressource).
+12.  `categories.md` : Page listant les différentes catégories de ressources (*updatée automatiquement* si des "tags" sont présentes dans la page d'une ressource).
 13.  `index.md` : La page d'accueil du site (appartient au dossier `docs/`, à ne pas confondre avec les pages `index` d'autres dossiers).
 14.  `mkdocs.yml` : Fichier de configuration pour MkDocs, définissant la structure et les paramètres du site.
 15.  `README.md` : Fichier contenant des informations générales sur le projet, visible sur la page principale du dépôt GitHub.
