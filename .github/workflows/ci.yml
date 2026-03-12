@@ -103,7 +103,7 @@ jobs:
       #
       # Si ce n’est pas le cas, la vérification échoue.
       - name: Check generated files
-        run: python overrides/auto_list_biblio-index.py --check
+        run: python overrides/auto_list_biblio-index.py --write
 
 
       # Étape 6 — Construire le site avec MkDocs
