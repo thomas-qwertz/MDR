@@ -2368,36 +2368,6 @@ Apportez votre expérience et interagissez avec la communauté !</p>
 </ul>
 </div>
 <h1 id="_1"><!-- "# " à conserver pour éviter le titre "Accueil" par défaut --></h1>
-<script>
-  ///// script pour l'animation d'accueil /////
-  function update () {
-    document.querySelectorAll('css-doodle').forEach(function (o) {
-      o.update();
-    });
-  }
-  window.addEventListener('load', function() {
-    //update();
-    setTimeout(update, 5000);
-  });
-  var interval = setInterval(update, 15000)
-  document.addEventListener('click', function() {
-  // clearInterval(interval)
-  update()
-  // interval = setInterval(update, 30000)
-  })
-
-  // Redirection home pour header
-  document.addEventListener('DOMContentLoaded', function() {
-    var element = document.querySelector('body > header > nav > div.md-header__title > div > div:nth-child(1) > span');
-    if (element) {
-      element.style.cursor = 'pointer';
-      element.addEventListener('click', function() {
-        window.location.href = "https://thomas-qwertz.github.io/MDR/";
-      });
-    }
-});
-
-</script>
 
 
 
