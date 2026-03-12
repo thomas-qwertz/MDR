@@ -60,6 +60,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import html
 import os
 import re
 import sys
@@ -109,6 +110,9 @@ RECOMMENDED_SECTIONS = {
 FRONT_MATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 H1_RE = re.compile(r"(?m)^#\s+(.+?)\s*$")
 H2_RE = re.compile(r"(?m)^##\s+(.+?)\s*$")
+DESCRIPTION_RE = re.compile(r"(?im)^\*{0,2}description\s*:\*{0,2}\s+.+$")
+RETOURS_RE = re.compile(r"(?i)retours d['’]expériences")
+REFERENCES_RE = re.compile(r"(?i)références")
 
 
 @dataclass(frozen=True)
@@ -223,6 +227,21 @@ def extract_h2_headings(md_text: str) -> list[str]:
     return [heading.strip() for heading in H2_RE.findall(md_text)]
 
 
+def has_description(md_text: str) -> bool:
+    """Vérifie la présence d'une description courte en tête de fiche."""
+    return DESCRIPTION_RE.search(md_text) is not None
+
+
+def has_retours_section(md_text: str) -> bool:
+    """Vérifie la présence d'un bloc de retours d'expériences."""
+    return RETOURS_RE.search(md_text) is not None
+
+
+def has_references_section(md_text: str) -> bool:
+    """Vérifie la présence d'un bloc de références."""
+    return REFERENCES_RE.search(md_text) is not None
+
+
 def normalize_tags(value: object) -> list[str]:
     """Vérifie et normalise la liste des catégories."""
     if isinstance(value, str):
@@ -328,6 +347,33 @@ def collect_resources(repo_root: Path) -> tuple[list[Resource], list[Message]]:
                     )
                 )
 
+        if not has_description(text):
+            messages.append(
+                Message(
+                    "warning",
+                    file_rel,
+                    "Description courte absente ou introuvable en tête de fiche.",
+                )
+            )
+
+        if not has_retours_section(text):
+            messages.append(
+                Message(
+                    "warning",
+                    file_rel,
+                    "Bloc 'Retours d'expériences' absent ou non détecté.",
+                )
+            )
+
+        if not has_references_section(text):
+            messages.append(
+                Message(
+                    "warning",
+                    file_rel,
+                    "Bloc 'Références' absent ou non détecté.",
+                )
+            )
+
         resources.append(
             Resource(
                 title=title,
@@ -358,18 +404,51 @@ def collect_resources(repo_root: Path) -> tuple[list[Resource], list[Message]]:
     return resources, messages
 
 
+def html_escape(value: str) -> str:
+    """Échappe un texte pour une insertion sûre dans du HTML généré."""
+    return html.escape(value, quote=True)
+
+
+def normalize_search_blob(*parts: str) -> str:
+    """Construit une chaîne normalisée pour la recherche côté client."""
+    return sort_key(" ".join(part for part in parts if part))
+
+
+def render_tag_badges(tags: list[str]) -> str:
+    """Génère les badges HTML d'une ressource."""
+    return "".join(
+        f'<span class="mdr-library-badge">{html_escape(tag)}</span>'
+        for tag in tags
+    )
+
+
+def render_filter_button(label: str, count: int, *, is_active: bool = False) -> str:
+    """Génère un bouton de filtre par catégorie."""
+    classes = "mdr-chip is-active" if is_active else "mdr-chip"
+    return (
+        f'<button type="button" class="{classes}" data-filter="{html_escape(label)}">'
+        f'<span class="mdr-chip__label">{html_escape(label)}</span>'
+        f'<span class="mdr-chip__count">{count}</span>'
+        "</button>"
+    )
+
+
 def render_index(resources: list[Resource]) -> str:
     """
     Génère automatiquement la page index de la bibliothèque.
     """
-    groups: dict[str, list[Resource]] = {DIGITS_HEADER: []}
-    for letter in [chr(code) for code in range(ord("A"), ord("Z") + 1)]:
-        groups[letter] = []
-
+    groups: dict[str, list[Resource]] = {}
     for resource in resources:
         bucket = group_key(resource.title)
-        if bucket in groups:
-            groups[bucket].append(resource)
+        groups.setdefault(bucket, []).append(resource)
+
+    ordered_group_keys = [DIGITS_HEADER] + [chr(code) for code in range(ord("A"), ord("Z") + 1)]
+    ordered_group_keys = [key for key in ordered_group_keys if groups.get(key)]
+
+    tag_counts: dict[str, int] = {tag: 0 for tag in ALLOWED_TAGS}
+    for resource in resources:
+        for tag in resource.tags:
+            tag_counts[tag] = tag_counts.get(tag, 0) + 1
 
     lines: list[str] = [
         "---",
@@ -381,14 +460,60 @@ def render_index(resources: list[Resource]) -> str:
         "",
         f"{len(resources)} ressources utiles à la recherche, triées par ordre alphabétique ou par [catégories](../categories.md) :",
         "",
+        '<div class="mdr-library-index" markdown="1">',
+        "",
+        '<div class="mdr-library-toolbar">',
+        '  <label class="mdr-library-search" for="mdr-library-search">',
+        '    <span class="mdr-library-search__label">Filtrer la liste</span>',
+        '    <input id="mdr-library-search" class="mdr-library-search__input" type="search" placeholder="Titre ou catégorie" autocomplete="off">',
+        "  </label>",
+        '  <div class="mdr-library-filters" role="toolbar" aria-label="Filtrer par catégorie">',
+        f'    <button type="button" class="mdr-chip is-active" data-filter="*"><span class="mdr-chip__label">Toutes</span><span class="mdr-chip__count">{len(resources)}</span></button>',
     ]
 
-    for letter in [DIGITS_HEADER] + [chr(code) for code in range(ord("A"), ord("Z") + 1)]:
+    for tag in ALLOWED_TAGS:
+        count = tag_counts.get(tag, 0)
+        if count:
+            lines.append("    " + render_filter_button(tag, count))
+
+    lines.extend(
+        [
+            "  </div>",
+            "</div>",
+            "",
+            f'<p class="mdr-library-status" aria-live="polite">{len(resources)} ressources affichées</p>',
+            '<p class="mdr-library-empty" hidden>Aucune ressource ne correspond aux filtres en cours.</p>',
+            "",
+        ]
+    )
+
+    for letter in ordered_group_keys:
+        lines.append(f'<section class="mdr-library-group" data-group="{html_escape(letter)}">')
         lines.append(f"## {letter}")
         lines.append("")
+        lines.append('<ul class="mdr-library-list">')
         for resource in groups[letter]:
-            lines.append(f"* [{resource.title}]({resource.filename})")
+            search_blob = normalize_search_blob(resource.title, " ".join(resource.tags))
+            tags_attr = "|".join(resource.tags)
+            badge_html = render_tag_badges(resource.tags)
+            lines.append(
+                '<li class="mdr-library-item" '
+                f'data-search="{html_escape(search_blob)}" '
+                f'data-tags="{html_escape(tags_attr)}">'
+                f'<a href="{html_escape(resource.filename)}">{html_escape(resource.title)}</a>'
+                f'<span class="mdr-library-item__tags">{badge_html}</span>'
+                "</li>"
+            )
+        lines.append("</ul>")
+        lines.append("</section>")
         lines.append("")
+
+    lines.extend(
+        [
+            "</div>",
+            "",
+        ]
+    )
 
     return "\n".join(lines).rstrip() + "\n"
 
